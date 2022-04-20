@@ -10,6 +10,9 @@ class Board extends React.Component {
                         <Square
                             value={cell}
                             key={i + "." + j}
+                            
+                            onClick={this.props.onOriginSelected && (() => this.props.onOriginSelected([i,j]))}
+                            //onClick={this.props.readonly ? undefined : () => this.props.onOriginSelected([i,j])}
                         />
                     )
                 )}

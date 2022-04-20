@@ -26,6 +26,10 @@ export function colorToCss(color) {
 class Game extends React.Component {
 
   pengine;
+  adyacentesC;
+  noVisitadas;
+  origin;
+  
 
   constructor(props) {
     super(props);
@@ -33,7 +37,9 @@ class Game extends React.Component {
       turns: 0,
       grid: null,
       complete: false,  // true if game is complete, false otherwise
-      waiting: false
+      waiting: false,
+      playing: false,
+      origin: undefined
     };
     this.handleClick = this.handleClick.bind(this);
     this.handlePengineCreate = this.handlePengineCreate.bind(this);
@@ -73,7 +79,7 @@ class Game extends React.Component {
     //        [r,b,b,v,p,y,p,r,b,g,p,y,b,r],
     //        [v,g,p,b,v,v,g,g,g,b,v,g,g,g]],r, Grid)
     const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
-    const queryS = "flick(" + gridS + "," + color + ", Grid)";
+    const queryS = "flick(" + gridS + "," + color + "," + adyacentesC + "," +  "Grid)";
     this.setState({
       waiting: true
     });
@@ -114,7 +120,20 @@ class Game extends React.Component {
             <div className="turnsNum">{this.state.turns}</div>
           </div>
         </div>
-        <Board grid={this.state.grid} />
+        <Board 
+          grid={this.state.grid} 
+          onOriginSelected={this.state.playing ? undefined :
+            origin => {
+              this.adyacentesC = [origin];
+              this.noVisitadas = [origin];
+              console.log(this.adyacentesC);
+              this.setState({
+               playing : true,
+                origin : origin
+              })
+            }
+          }
+        />
       </div>
     );
   }
