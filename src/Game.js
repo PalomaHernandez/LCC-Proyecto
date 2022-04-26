@@ -8,6 +8,7 @@ import Board from './Board';
 
 const colors = ["r", "v", "p", "g", "b", "y"];  // red, violet, pink, green, blue, yellow
 
+
 /**
  * Returns the CSS representation of the received color.
  */
@@ -26,11 +27,7 @@ export function colorToCss(color) {
 class Game extends React.Component {
 
   pengine;
-  adyacentesC;
-  noVisitadas;
-  origin;
   
-
   constructor(props) {
     super(props);
     this.state = {
@@ -39,7 +36,8 @@ class Game extends React.Component {
       complete: false,  // true if game is complete, false otherwise
       waiting: false,
       playing: false,
-      origin: undefined
+      origin: undefined,
+      adyacentesC: null
     };
     this.handleClick = this.handleClick.bind(this);
     this.handlePengineCreate = this.handlePengineCreate.bind(this);
@@ -59,7 +57,7 @@ class Game extends React.Component {
 
   handleClick(color) {
     // No action on click if game is complete or we are waiting.
-    if (this.state.complete || this.state.waiting) {
+    if (this.state.complete || this.state.waiting ) {
       return;
     }
     // Build Prolog query to apply the color flick.
@@ -78,8 +76,12 @@ class Game extends React.Component {
     //        [r,p,g,y,v,y,r,b,v,r,b,y,r,v],
     //        [r,b,b,v,p,y,p,r,b,g,p,y,b,r],
     //        [v,g,p,b,v,v,g,g,g,b,v,g,g,g]],r, Grid)
+
     const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
-    const queryS = "flick(" + gridS + "," + color + "," + adyacentesC + "," +  "Grid)";
+    //const adyS = JSON.stringify(this.state.adyacentesC).replaceAll('', "]");
+    //console.log(adyacentesC);
+    //const ady= JSON.stringify(this.state.adyacentesC);
+    const queryS = "flick(" + gridS + "," + color +  ",[[" + this.state.adyacentesC + "]],Grid)";
     this.setState({
       waiting: true
     });
@@ -121,18 +123,18 @@ class Game extends React.Component {
           </div>
         </div>
         <Board 
-          grid={this.state.grid} 
-          onOriginSelected={this.state.playing ? undefined :
-            origin => {
-              this.adyacentesC = [origin];
-              this.noVisitadas = [origin];
-              console.log(this.adyacentesC);
-              this.setState({
-               playing : true,
-                origin : origin
-              })
-            }
-          }
+        grid={this.state.grid} 
+        onOriginSelected ={this.state.playing ? undefined :
+          origin => {
+            
+            this.setState({
+              playing: true,
+              origin: origin
+            })
+            console.log(origin);
+            this.state.adyacentesC = [origin];
+            console.log(this.state.adyacentesC);
+          }}
         />
       </div>
     );
