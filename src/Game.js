@@ -27,6 +27,7 @@ export function colorToCss(color) {
 class Game extends React.Component {
 
   pengine;
+  origin;
   
   constructor(props) {
     super(props);
@@ -60,6 +61,15 @@ class Game extends React.Component {
     if (this.state.complete || this.state.waiting ) {
       return;
     }
+    if(this.state.playing === false){  
+        this.setState({
+          playing: true,
+          origin: [0,0]
+        })  
+        this.origin = [0,0];
+        this.state.adyacentesC = [this.origin];
+    }
+    
     // Build Prolog query to apply the color flick.
     // The query will be like:
     // flick([[g,g,b,g,v,y,p,v,b,p,v,p,v,r],
@@ -78,10 +88,8 @@ class Game extends React.Component {
     //        [v,g,p,b,v,v,g,g,g,b,v,g,g,g]],r, Grid)
 
     const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
-    //const adyS = JSON.stringify(this.state.adyacentesC).replaceAll('', "]");
-    //console.log(adyacentesC);
-    //const ady= JSON.stringify(this.state.adyacentesC);
-    const queryS = `flick(${gridS}, ${color} , [[${this.state.adyacentesC}]] , Grid)`;
+    
+    const queryS = `flick(${gridS}, ${color} , [[${this.state.adyacentesC}]] , Grid, fAdyacentesC)`;
     
     //const queryS = "flick(" + gridS + "," + color + ",[[0,0]],Grid)";
     console.log(queryS);
@@ -93,6 +101,7 @@ class Game extends React.Component {
         console.log("no fallo consulta");
         this.setState({
           grid: response['Grid'],
+          adyacentesC: response['fAdyacentesC'],
           turns: this.state.turns + 1,
           waiting: false
         });

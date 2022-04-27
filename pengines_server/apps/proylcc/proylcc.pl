@@ -1,6 +1,6 @@
 :- module(proylcc, 
 	[  
-		flick/4
+		flick/5
 	]).
 
 :-use_module(library(lists)).
@@ -45,5 +45,9 @@ setColor(Grid, [[X,Y]|Ls], C, NewGridA):-
 	setColor(NewGrid,Ls,C,NewGridA).
 
 
-flick(Grid, Color,AdyacentesC, FGrid):-
-    setColor(Grid, AdyacentesC, Color, FGrid).
+flick(Grid, Color, AdyacentesC, FGrid, FAdyacentesC):-
+	AdyacentesC = [A|_Ad],
+	getColor(Grid, A, C),
+	Color \= C,
+	setColor(Grid, AdyacentesC, Color, FGrid),
+	findall( [I,J], (member([I,J], adyacentes([I,J],AdyacentesC)), getColor(Grid,[I,J],Color)),FAdyacentesC).
