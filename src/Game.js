@@ -81,19 +81,23 @@ class Game extends React.Component {
     //const adyS = JSON.stringify(this.state.adyacentesC).replaceAll('', "]");
     //console.log(adyacentesC);
     //const ady= JSON.stringify(this.state.adyacentesC);
-    const queryS = `flick(${gridS}, ${color} , [[${this.state.adyacentesC}]], Grid)`;
+    const queryS = `flick(${gridS}, ${color} , [[${this.state.adyacentesC}]] , Grid)`;
+    
+    //const queryS = "flick(" + gridS + "," + color + ",[[0,0]],Grid)";
     console.log(queryS);
     this.setState({
       waiting: true
     });
     this.pengine.query(queryS, (success, response) => {
       if (success) {
+        console.log("no fallo consulta");
         this.setState({
           grid: response['Grid'],
           turns: this.state.turns + 1,
           waiting: false
         });
       } else {
+        console.log("fallo consulta");
         // Prolog query will fail when the clicked color coincides with that in the top left cell.
         this.setState({
           waiting: false
@@ -133,7 +137,7 @@ class Game extends React.Component {
               origin: origin
             })
             console.log(origin);
-            this.state.adyacentesC = [[origin]];
+            this.state.adyacentesC = [origin];
             console.log(this.state.adyacentesC);
           }}
         />

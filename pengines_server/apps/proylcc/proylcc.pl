@@ -13,13 +13,6 @@
 % Retorna false si Color coincide con el color de la celda superior izquierda de la grilla. 
 % Para cada celda noVisitada ver si sus celdas adyacentes son del mismo color
 
-flick(Grid, Color,AdyacentesC, FGrid):-
-	% nth0(1 , AdyacentesC, P),
-	% getColor(Grid, P, C),
-	% C \= Color,
-    setColor(Grid, AdyacentesC, Color, FGrid).
-    % findall( [I,J], (member([I,J], AdyacentesC), getColor(Grid,[I,J],Color)),FAdyacentesC).
-
 replace(X, 0, Y, [X|Xs], [Y|Xs]).
 
 replace(X, XIndex, Y, [Xi|Xs], [Xi|XsY]):-
@@ -52,3 +45,5 @@ setColor(Grid, [[X,Y]|Ls], C, NewGridA):-
 	setColor(NewGrid,Ls,C,NewGridA).
 
 
+flick(Grid, Color,AdyacentesC, FGrid):-
+    setColor(Grid, AdyacentesC, Color, FGrid).
