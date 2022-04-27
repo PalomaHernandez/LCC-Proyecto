@@ -14,7 +14,9 @@
 % Para cada celda noVisitada ver si sus celdas adyacentes son del mismo color
 
 flick(Grid, Color,AdyacentesC, FGrid):-
-	getColor(Grid, AdyacentesC, C),
+	% nth0(1 , AdyacentesC, P),
+	% getColor(Grid, P, C),
+	% C \= Color,
     setColor(Grid, AdyacentesC, Color, FGrid).
     % findall( [I,J], (member([I,J], AdyacentesC), getColor(Grid,[I,J],Color)),FAdyacentesC).
 
@@ -40,8 +42,6 @@ adyacentes([X,Y], ListaAdy):-
      YR is Y-1,
      ListaAdy= [[XS, Y],[XR,Y],[X,YS],[X,YR]].
 	 
-
-
 
 setColor(Grid, [], _C, Grid).
 setColor(Grid, [[X,Y]|Ls], C, NewGridA):-

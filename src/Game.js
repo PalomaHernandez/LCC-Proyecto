@@ -81,7 +81,8 @@ class Game extends React.Component {
     //const adyS = JSON.stringify(this.state.adyacentesC).replaceAll('', "]");
     //console.log(adyacentesC);
     //const ady= JSON.stringify(this.state.adyacentesC);
-    const queryS = "flick(" + gridS + "," + color +  ",[[" + this.state.adyacentesC + "]],Grid)";
+    const queryS = `flick(${gridS}, ${color} , [[${this.state.adyacentesC}]], Grid)`;
+    console.log(queryS);
     this.setState({
       waiting: true
     });
@@ -132,7 +133,7 @@ class Game extends React.Component {
               origin: origin
             })
             console.log(origin);
-            this.state.adyacentesC = [origin];
+            this.state.adyacentesC = [[origin]];
             console.log(this.state.adyacentesC);
           }}
         />
