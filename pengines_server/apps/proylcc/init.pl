@@ -1,4 +1,4 @@
-:- module(init, [ init/1 ]).
+:- module(init, [ init/2]).
 
 init([
 		 [y,g,b,g,v,y,p,v,b,p,v,p,v,r],
@@ -15,4 +15,4 @@ init([
 		 [r,p,g,y,v,y,r,b,v,r,b,y,r,v],
 		 [r,b,b,v,p,y,p,r,b,g,p,y,b,r],
 		 [v,g,p,b,v,v,g,g,g,b,v,g,g,g]
-		 ]).
+		 ], [null,null]).

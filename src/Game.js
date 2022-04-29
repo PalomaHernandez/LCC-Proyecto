@@ -8,6 +8,7 @@ import Board from './Board';
 
 const colors = ["r", "v", "p", "g", "b", "y"];  // red, violet, pink, green, blue, yellow
 
+
 /**
  * Returns the CSS representation of the received color.
  */
@@ -26,11 +27,8 @@ export function colorToCss(color) {
 class Game extends React.Component {
 
   pengine;
-  adyacentesC;
-  noVisitadas;
   origin;
   
-
   constructor(props) {
     super(props);
     this.state = {
@@ -39,7 +37,8 @@ class Game extends React.Component {
       complete: false,  // true if game is complete, false otherwise
       waiting: false,
       playing: false,
-      origin: undefined
+      origin: undefined,
+      adyacentesC: null
     };
     this.handleClick = this.handleClick.bind(this);
     this.handlePengineCreate = this.handlePengineCreate.bind(this);
@@ -47,11 +46,12 @@ class Game extends React.Component {
   }
 
   handlePengineCreate() {
-    const queryS = 'init(Grid)';
+    const queryS = 'init(Grid, LAdyacentes)';
     this.pengine.query(queryS, (success, response) => {
       if (success) {
         this.setState({
-          grid: response['Grid']
+          grid: response['Grid'],
+          adyacentesC: response['LAdyacentes'],
         });
       }
     });
@@ -59,9 +59,18 @@ class Game extends React.Component {
 
   handleClick(color) {
     // No action on click if game is complete or we are waiting.
-    if (this.state.complete || this.state.waiting) {
+    if (this.state.complete || this.state.waiting ) {
       return;
     }
+    if(this.state.playing === false){  
+        this.setState({
+          playing: true,
+          origin: [0,0]
+        })  
+        this.origin = [0,0];
+        this.state.adyacentesC = [this.origin];
+    }
+    
     // Build Prolog query to apply the color flick.
     // The query will be like:
     // flick([[g,g,b,g,v,y,p,v,b,p,v,p,v,r],
@@ -78,19 +87,27 @@ class Game extends React.Component {
     //        [r,p,g,y,v,y,r,b,v,r,b,y,r,v],
     //        [r,b,b,v,p,y,p,r,b,g,p,y,b,r],
     //        [v,g,p,b,v,v,g,g,g,b,v,g,g,g]],r, Grid)
+
     const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
-    const queryS = "flick(" + gridS + "," + color + "," + adyacentesC + "," +  "Grid)";
+    const aux=JSON.stringify(this.state.adyacentesC).replaceAll('"', "");
+    const queryS = `flick(${gridS}, ${color} , ${aux} , Grid, FAdyacentesC)`;
+    
+    //const queryS = "flick(" + gridS + "," + color + ",[[0,0]],Grid)";
+    console.log(queryS);
     this.setState({
       waiting: true
     });
     this.pengine.query(queryS, (success, response) => {
       if (success) {
+        console.log("no fallo consulta");
         this.setState({
           grid: response['Grid'],
+          adyacentesC: response['FAdyacentesC'],
           turns: this.state.turns + 1,
           waiting: false
         });
       } else {
+        console.log("fallo consulta");
         // Prolog query will fail when the clicked color coincides with that in the top left cell.
         this.setState({
           waiting: false
@@ -121,18 +138,18 @@ class Game extends React.Component {
           </div>
         </div>
         <Board 
-          grid={this.state.grid} 
-          onOriginSelected={this.state.playing ? undefined :
-            origin => {
-              this.adyacentesC = [origin];
-              this.noVisitadas = [origin];
-              console.log(this.adyacentesC);
-              this.setState({
-               playing : true,
-                origin : origin
-              })
-            }
-          }
+        grid={this.state.grid} 
+        onOriginSelected ={this.state.playing ? undefined :
+          origin => {
+            
+            this.setState({
+              playing: true,
+              origin: origin
+            })
+            console.log(origin);
+            this.state.adyacentesC = [origin];
+            console.log(this.state.adyacentesC);
+          }}
         />
       </div>
     );
