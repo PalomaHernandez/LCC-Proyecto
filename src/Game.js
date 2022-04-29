@@ -89,8 +89,13 @@ class Game extends React.Component {
     //        [v,g,p,b,v,v,g,g,g,b,v,g,g,g]],r, Grid)
 
     const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
+<<<<<<< HEAD
     const aux=JSON.stringify(this.state.adyacentesC).replaceAll('"', "");
     const queryS = `flick(${gridS}, ${color} , ${aux} , Grid, FAdyacentesC)`;
+=======
+    
+    const queryS = `flick(${gridS}, ${color} , [[${this.state.adyacentesC}]] , Grid, fAdyacentesC)`;
+>>>>>>> d919c43b269b3a798b9eb173670377591cd42ce9
     
     //const queryS = "flick(" + gridS + "," + color + ",[[0,0]],Grid)";
     console.log(queryS);
@@ -102,7 +107,11 @@ class Game extends React.Component {
         console.log("no fallo consulta");
         this.setState({
           grid: response['Grid'],
+<<<<<<< HEAD
           adyacentesC: response['FAdyacentesC'],
+=======
+          adyacentesC: response['fAdyacentesC'],
+>>>>>>> d919c43b269b3a798b9eb173670377591cd42ce9
           turns: this.state.turns + 1,
           waiting: false
         });
