@@ -24,10 +24,6 @@ getColor(Grid, [X,Y], Color):-
 	nth0(X, Grid, R),
 	nth0(Y, R, Color).
 
-<<<<<<< HEAD
-
-=======
->>>>>>> d919c43b269b3a798b9eb173670377591cd42ce9
 adyacentes([X,Y], ListaAdy):-
 	 XS is X+1,
 	 XR is X-1,
@@ -43,31 +39,22 @@ setColor(Grid, [[X,Y]|Ls], C, NewGridA):-
 	replace(Color , Y, C, R, NewR),
 	replace(R, X, NewR, Grid, NewGrid),
 	setColor(NewGrid,Ls,C,NewGridA).
-<<<<<<< HEAD
 
-
-buscarAdyacentes([], []).
-buscarAdyacentes([[I,J]], Lf):- adyacentes([I,J], Lf).
-buscarAdyacentes([[X,Y]|Ls], NewGridA):-
-    adyacentes([X,Y], La),
-    buscarAdyacentes(Ls, Lb), 
-    append(La,Lb,NewGridA).
+buscarAdyacentesC(_,[],_, _, []).
+buscarAdyacentesC(Grid,[[I,J]|L],Color, Visitados, Lf):- 
+                adyacentes([I,J], La),
+               findall( [Y,X], (member([Y,X], La), getColor(Grid,[Y,X],Color), not(member([Y,X],Visitados))), Ls),
+               append(Visitados, La, V), 
+                buscarAdyacentesC(Grid,Ls, Color, V, Lm),
+                append(Ls,Lm,Lh),
+                buscarAdyacentesC(Grid,L, Color, V, Lt),
+                append(Lh,Lt,Lf).
 
 flick(Grid, Color,AdyacentesC, FGrid, NewAdyacentesC):-
-AdyacentesC = [A|_Ad],
-	getColor(Grid, A, C),
-	Color \= C,
+    AdyacentesC = [A|_Ad],
+    getColor(Grid, A, C),
+    Color \= C,
     setColor(Grid, AdyacentesC, Color, FGrid),
-    buscarAdyacentes(AdyacentesC, La),
-	findall( [I,J], (member([I,J], La), getColor(Grid,[I,J],Color)),FAdyacentesC),
-    append(AdyacentesC,FAdyacentesC, NewAdyacentesC).
-=======
->>>>>>> d919c43b269b3a798b9eb173670377591cd42ce9
-
-
-flick(Grid, Color, AdyacentesC, FGrid, FAdyacentesC):-
-	AdyacentesC = [A|_Ad],
-	getColor(Grid, A, C),
-	Color \= C,
-	setColor(Grid, AdyacentesC, Color, FGrid),
-	findall( [I,J], (member([I,J], adyacentes([I,J],AdyacentesC)), getColor(Grid,[I,J],Color)),FAdyacentesC).
+    buscarAdyacentesC(FGrid,AdyacentesC, Color, AdyacentesC, La),
+    append(AdyacentesC,La, NewAdyacentesCF),
+    sort(NewAdyacentesCF,NewAdyacentesC).

@@ -26,18 +26,17 @@ export function colorToCss(color) {
 }
 class Game extends React.Component {
 
-  pengine;
-  origin;
+  pengine; 
   
   constructor(props) {
     super(props);
     this.state = {
       turns: 0,
+      longitud: 0,
       grid: null,
       complete: false,  // true if game is complete, false otherwise
       waiting: false,
       playing: false,
-      origin: undefined,
       adyacentesC: null
     };
     this.handleClick = this.handleClick.bind(this);
@@ -51,26 +50,27 @@ class Game extends React.Component {
       if (success) {
         this.setState({
           grid: response['Grid'],
-          adyacentesC: response['LAdyacentes'],
+          adyacentesC: response['LAdyacentes']
         });
       }
     });
   }
 
   handleClick(color) {
+    if(this.state.adyacentesC.length === 196){
+      this.setState({
+        complete: true
+      })
+    }
     // No action on click if game is complete or we are waiting.
     if (this.state.complete || this.state.waiting ) {
       return;
     }
-    if(this.state.playing === false){  
+    if(this.state.playing === false){ 
         this.setState({
-          playing: true,
-          origin: [0,0]
+          playing: true
         })  
-        this.origin = [0,0];
-        this.state.adyacentesC = [this.origin];
     }
-    
     // Build Prolog query to apply the color flick.
     // The query will be like:
     // flick([[g,g,b,g,v,y,p,v,b,p,v,p,v,r],
@@ -89,26 +89,39 @@ class Game extends React.Component {
     //        [v,g,p,b,v,v,g,g,g,b,v,g,g,g]],r, Grid)
 
     const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
+<<<<<<< Updated upstream
 
     const aux=JSON.stringify(this.state.adyacentesC).replaceAll('"', "");
     const queryS = `flick(${gridS}, ${color} , ${aux} , Grid, FAdyacentesC)`;
 
     
     //const queryS = "flick(" + gridS + "," + color + ",[[0,0]],Grid)";
+=======
+    const aux=JSON.stringify(this.state.adyacentesC).replaceAll('"', "");
+    const queryS = `flick(${gridS}, ${color} , ${aux} , Grid, FAdyacentesC)`;
+    
+>>>>>>> Stashed changes
     console.log(queryS);
+
     this.setState({
       waiting: true
     });
+
     this.pengine.query(queryS, (success, response) => {
       if (success) {
         console.log("no fallo consulta");
         this.setState({
           grid: response['Grid'],
+<<<<<<< Updated upstream
 
           adyacentesC: response['FAdyacentesC'],
 
 
+=======
+          adyacentesC: response['FAdyacentesC'],
+>>>>>>> Stashed changes
           turns: this.state.turns + 1,
+          longitud: this.state.adyacentesC.length,
           waiting: false
         });
       } else {
@@ -122,6 +135,10 @@ class Game extends React.Component {
   }
 
   render() {
+    let statusText = "En juego";
+    if(this.state.complete){
+      statusText = "Termino el juego";
+    }
     if (this.state.grid === null) {
       return null;
     }
@@ -146,16 +163,15 @@ class Game extends React.Component {
         grid={this.state.grid} 
         onOriginSelected ={this.state.playing ? undefined :
           origin => {
-            
             this.setState({
               playing: true,
-              origin: origin
+              adyacentesC: [origin]
             })
-            console.log(origin);
-            this.state.adyacentesC = [origin];
-            console.log(this.state.adyacentesC);
           }}
         />
+        <div className="gameInfo">
+          {statusText}
+        </div>
       </div>
     );
   }
