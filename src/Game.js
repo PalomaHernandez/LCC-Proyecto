@@ -26,13 +26,12 @@ export function colorToCss(color) {
 }
 class Game extends React.Component {
 
-  pengine; 
-  
+  pengine;
+
   constructor(props) {
     super(props);
     this.state = {
       turns: 0,
-      longitud: 0,
       grid: null,
       complete: false,  // true if game is complete, false otherwise
       waiting: false,
@@ -57,11 +56,6 @@ class Game extends React.Component {
   }
 
   handleClick(color) {
-    if(this.state.adyacentesC.length === 196){
-      this.setState({
-        complete: true
-      })
-    }
     // No action on click if game is complete or we are waiting.
     if (this.state.complete || this.state.waiting ) {
       return;
@@ -89,18 +83,12 @@ class Game extends React.Component {
     //        [v,g,p,b,v,v,g,g,g,b,v,g,g,g]],r, Grid)
 
     const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
-<<<<<<< Updated upstream
 
     const aux=JSON.stringify(this.state.adyacentesC).replaceAll('"', "");
     const queryS = `flick(${gridS}, ${color} , ${aux} , Grid, FAdyacentesC)`;
 
     
     //const queryS = "flick(" + gridS + "," + color + ",[[0,0]],Grid)";
-=======
-    const aux=JSON.stringify(this.state.adyacentesC).replaceAll('"', "");
-    const queryS = `flick(${gridS}, ${color} , ${aux} , Grid, FAdyacentesC)`;
-    
->>>>>>> Stashed changes
     console.log(queryS);
 
     this.setState({
@@ -112,16 +100,8 @@ class Game extends React.Component {
         console.log("no fallo consulta");
         this.setState({
           grid: response['Grid'],
-<<<<<<< Updated upstream
-
           adyacentesC: response['FAdyacentesC'],
-
-
-=======
-          adyacentesC: response['FAdyacentesC'],
->>>>>>> Stashed changes
           turns: this.state.turns + 1,
-          longitud: this.state.adyacentesC.length,
           waiting: false
         });
       } else {
@@ -131,9 +111,15 @@ class Game extends React.Component {
           waiting: false
         });
       }
+      //this.state.longitud = this.state.adyacentesC.length;
+      if(this.state.adyacentesC.length === 196){
+        this.setState({
+          complete: true
+        })
+      }
     });
   }
-
+  
   render() {
     let statusText = "En juego";
     if(this.state.complete){
@@ -158,6 +144,10 @@ class Game extends React.Component {
             <div className="turnsLab">Turns</div>
             <div className="turnsNum">{this.state.turns}</div>
           </div>
+          <div className="longPanel">
+            <div className="longLab">Cantidad Adyacentes</div>
+            <div className="longNum">{this.state.adyacentesC.length}</div>
+          </div>
         </div>
         <Board 
         grid={this.state.grid} 
@@ -165,9 +155,11 @@ class Game extends React.Component {
           origin => {
             this.setState({
               playing: true,
-              adyacentesC: [origin]
+              adyacentesC: [origin],
             })
-          }}
+            
+          }
+        }
         />
         <div className="gameInfo">
           {statusText}
