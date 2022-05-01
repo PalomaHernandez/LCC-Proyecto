@@ -33,6 +33,7 @@ class Game extends React.Component {
     this.state = {
       turns: 0,
       grid: null,
+      longitud: 1,
       complete: false,  // true if game is complete, false otherwise
       waiting: false,
       playing: false,
@@ -111,8 +112,11 @@ class Game extends React.Component {
           waiting: false
         });
       }
+      this.setState({
+        longitud: this.state.adyacentesC.length
+      });
       //this.state.longitud = this.state.adyacentesC.length;
-      if(this.state.adyacentesC.length === 196){
+      if(this.state.longitud === 196){
         this.setState({
           complete: true
         })
@@ -146,7 +150,7 @@ class Game extends React.Component {
           </div>
           <div className="longPanel">
             <div className="longLab">Cantidad Adyacentes</div>
-            <div className="longNum">{this.state.adyacentesC.length}</div>
+            <div className="longNum">{this.state.longitud - 1}</div>
           </div>
         </div>
         <Board 
@@ -157,7 +161,6 @@ class Game extends React.Component {
               playing: true,
               adyacentesC: [origin],
             })
-            
           }
         }
         />

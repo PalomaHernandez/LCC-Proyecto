@@ -11,7 +11,7 @@ class Board extends React.Component {
                             value={cell}
                             key={i + "." + j}
                             //onClick ={this.props.onOriginSelected && (() => this.props.onOriginSelected([i,j]))}
-                            onClick ={() => this.props.onOriginSelected && this.props.onOriginSelected([i,j])}
+                            onClick ={() => this.props.onOriginSelected && this.props.onOriginSelected([i,j]) }
                         />
                     )
                 )}
