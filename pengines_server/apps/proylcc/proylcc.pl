@@ -4,6 +4,11 @@
 	]).
 
 :-use_module(library(lists)).
+:- dynamic visitados/1.
+
+visitar([]).
+visitar([X|Xs]):- assert(visitados(X)), 
+    			visitar(Xs).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -40,14 +45,14 @@ setColor(Grid, [[X,Y]|Ls], C, NewGridA):-
 	replace(R, X, NewR, Grid, NewGrid),
 	setColor(NewGrid,Ls,C,NewGridA).
 
-buscarAdyacentesC(_,[],_, _, []).
-buscarAdyacentesC(Grid,[[I,J]|L],Color, Visitados, Lf):- 
+buscarAdyacentesC(_,[],_ , []).
+buscarAdyacentesC(Grid,[[I,J]|L],Color, Lf):- 
                 adyacentes([I,J], La),
-               findall( [Y,X], (member([Y,X], La), getColor(Grid,[Y,X],Color), not(member([Y,X],Visitados))), Ls),
-               append(Visitados, La, V), 
-                buscarAdyacentesC(Grid,Ls, Color, V, Lm),
+                findall( [Y,X], (member([Y,X], La), getColor(Grid,[Y,X],Color), not(visitados([Y,X]))), Ls),
+                visitar(La),
+                buscarAdyacentesC(Grid,Ls, Color, Lm),
                 append(Ls,Lm,Lh),
-                buscarAdyacentesC(Grid,L, Color, V, Lt),
+                buscarAdyacentesC(Grid,L, Color, Lt),
                 append(Lh,Lt,Lf).
 
 flick(Grid, Color,AdyacentesC, FGrid, NewAdyacentesC):-
@@ -55,6 +60,7 @@ flick(Grid, Color,AdyacentesC, FGrid, NewAdyacentesC):-
     getColor(Grid, A, C),
     Color \= C,
     setColor(Grid, AdyacentesC, Color, FGrid),
-    buscarAdyacentesC(FGrid,AdyacentesC, Color, AdyacentesC, La),
-    append(AdyacentesC,La, NewAdyacentesCF),
-    sort(NewAdyacentesCF,NewAdyacentesC).
+    visitar(AdyacentesC),
+    buscarAdyacentesC(FGrid,AdyacentesC, Color, La),
+    retractall(visitados(_)),
+    append(AdyacentesC,La, NewAdyacentesC).
