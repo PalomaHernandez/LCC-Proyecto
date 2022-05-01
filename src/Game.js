@@ -7,7 +7,7 @@ import Board from './Board';
  */
 
 const colors = ["r", "v", "p", "g", "b", "y"];  // red, violet, pink, green, blue, yellow
-
+var history = [];
 
 /**
  * Returns the CSS representation of the received color.
@@ -105,6 +105,8 @@ class Game extends React.Component {
           turns: this.state.turns + 1,
           waiting: false
         });
+        history.push(color);
+        console.log(history);
       } else {
         console.log("fallo consulta");
         // Prolog query will fail when the clicked color coincides with that in the top left cell.
@@ -164,8 +166,18 @@ class Game extends React.Component {
           }
         }
         />
-        <div className="gameInfo">
-          {statusText}
+        <div className="rightPanel">
+          <div className="gameInfo">
+            {statusText}
+          </div>
+          <div className="cellsPanel">
+          {history.map(color =>
+              <button
+                className="cells"
+                style={{ backgroundColor: colorToCss(color) }}
+                key={color}
+              />)}
+          </div>
         </div>
       </div>
     );

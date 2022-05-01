@@ -75,7 +75,22 @@ body {
   grid-template-rows: repeat(14, 40px);
 }
 
-.celda {
-  border: 2px solid black;
+.rightPanel {
+  display: flex;
+  flex-direction: column;
+  margin: 20px;
 }
 
+.cellsPanel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 40px;
+  font-size: 20px;
+}
+
+.cells {
+  height: 40px;
+  width: 40px;
+  border: none;
+}
