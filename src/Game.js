@@ -151,7 +151,7 @@ class Game extends React.Component {
             <div className="turnsNum">{this.state.turns}</div>
           </div>
           <div className="longPanel">
-            <div className="longLab">Cantidad Adyacentes</div>
+            <div className="longLab">Cantidad de Adyacentes</div>
             <div className="longNum">{this.state.longitud - 1}</div>
           </div>
         </div>

@@ -1,4 +1,6 @@
 body {
+  width: 1500px;
+  height: 1500px;
   font: 14px "Century Gothic", Futura, sans-serif;
   margin: 20px;
 }
@@ -10,6 +12,8 @@ body {
 
 .leftPanel {
   display: flex;
+  width: 400px;
+  height: 400px;
   flex-direction: column;
   margin: 20px;
 }
@@ -61,6 +65,8 @@ body {
 }
 
 .longLab {
+  display: flex;
+  align-items: center;
   text-transform: uppercase;
 }
 
@@ -77,20 +83,33 @@ body {
 
 .rightPanel {
   display: flex;
+  align-items: center;
+  width: 400px;
+  height: 400px;
   flex-direction: column;
   margin: 20px;
+  margin-top: 40px;
+  font-size: 20px;
+  color: darkblue;
 }
 
 .cellsPanel {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 40px;
+  display: inline-block;
+  /*flex-direction: column;*/
+  /*align-items: center;*/
+  margin-top: 10px;
   font-size: 20px;
 }
 
 .cells {
-  height: 40px;
-  width: 40px;
+  margin-top: 4px;
+  margin-right: 4px;
+  height: 30px;
+  width: 30px;
   border: none;
+}
+
+.gameInfo {
+  display: flex;
+  text-transform: uppercase;
 }
