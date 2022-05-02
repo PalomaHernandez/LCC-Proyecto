@@ -147,12 +147,15 @@ class Game extends React.Component {
               />)}
           </div>
           <div className="turnsPanel">
-            <div className="turnsLab">Turns</div>
+            <div className="turnsLab">Turnos</div>
             <div className="turnsNum">{this.state.turns}</div>
           </div>
           <div className="longPanel">
-            <div className="longLab">Cantidad de Adyacentes</div>
+            <div className="longLab">Celdas capturadas</div>
             <div className="longNum">{this.state.longitud - 1}</div>
+          </div>
+          <div className="gameInfo">
+            {statusText}
           </div>
         </div>
         <Board 
@@ -168,8 +171,8 @@ class Game extends React.Component {
         origin={this.state.adyacentesC ? this.state.adyacentesC[0] : undefined}
         />
         <div className="rightPanel">
-          <div className="gameInfo">
-            {statusText}
+        <div className="historialPanel">
+            <div className="historialLab">Historial de jugadas</div>
           </div>
           <div className="cellsPanel">
           {history.map(color =>
