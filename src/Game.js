@@ -165,6 +165,7 @@ class Game extends React.Component {
             })
           }
         }
+        origin={this.state.adyacentesC ? this.state.adyacentesC[0] : undefined}
         />
         <div className="rightPanel">
           <div className="gameInfo">

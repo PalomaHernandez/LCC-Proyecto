@@ -7,7 +7,7 @@ class Square extends React.Component {
     render() {
         return (
             <div style={{backgroundColor: colorToCss(this.props.value)}} 
-
+            className={this.props.originCell ? "originCell" : undefined}
             onClick={this.props.onClick}
             />
         );

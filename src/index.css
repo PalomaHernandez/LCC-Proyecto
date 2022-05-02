@@ -18,6 +18,10 @@ body {
   margin: 20px;
 }
 
+.originCell{
+  border: 1px solid black;
+}
+
 .buttonsPanel {
   display: grid;
   grid-template-columns: auto auto auto;
