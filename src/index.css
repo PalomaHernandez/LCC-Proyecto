@@ -18,11 +18,11 @@ body {
   height: 400px;
   flex-direction: column;
   margin-right: 15px;
-  margin-top: 50px;
+  margin-top: 70px;
 }
 
 .originCell{
-  border: 3px solid white;
+  border: 2px solid white;
 }
 
 .buttonsPanel {
@@ -84,6 +84,9 @@ body {
 .board {
   margin: 20px;
   display: grid;
+  border: 3px solid white;
+  width: fit-content;
+  height: fit-content;
   grid-template-columns: repeat(14, 40px);
   grid-template-rows: repeat(14, 40px);
 }
@@ -92,7 +95,8 @@ body {
   display: flex;
   align-items: center;
   width: 470px;
-  height: auto;
+  min-height: 300px;
+  height: fit-content;
   flex-direction: column;
   margin: 30px;
   margin-left: 50px;
@@ -121,14 +125,15 @@ body {
   display: inline-block;
   /*flex-direction: column;*/
   align-items: center;
-  margin: 10px;
+  margin: 6px;
+  margin-right: 1px;
   margin-top: 10px;
 }
 
 .cells {
   margin-top: 4px;
   margin-right: 3px;
-  margin-left: 4px;
+  margin-left: 5px;
   height: 30px;
   width: 30px;
   border: none;
@@ -147,7 +152,7 @@ body {
 .won{
   position: absolute;
   background: rgba(255, 255, 255, 0.283);
-  width: 1210px;
+  width: 1230px;
   height: 640px;
   display: flex;
   align-items: center;

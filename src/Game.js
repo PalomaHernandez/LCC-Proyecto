@@ -15,12 +15,12 @@ var history = [];
 
 export function colorToCss(color) {
   switch (color) {
-    case "r": return "red";
-    case "v": return "violet";
-    case "p": return "pink";
-    case "g": return "green";
-    case "b": return "blue";
-    case "y": return "yellow";
+    case "r": return "#cc2a2a";
+    case "v": return "#b33078";
+    case "p": return "#ee9696";
+    case "g": return "#3f9138";
+    case "b": return "#636bd3";
+    case "y": return "#e7da25";
   }
   return color;
 }
