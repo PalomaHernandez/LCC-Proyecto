@@ -34,7 +34,7 @@ class Game extends React.Component {
       turns: 0,
       grid: null,
       longitud: 1,
-      complete: false,  // true if game is complete, false otherwise
+      complete: true,  // true if game is complete, false otherwise
       waiting: false,
       playing: false,
       adyacentesC: null
@@ -152,7 +152,7 @@ class Game extends React.Component {
           </div>
           <div className="longPanel">
             <div className="longLab">Celdas capturadas</div>
-            <div className="longNum">{this.state.longitud - 1}</div>
+            <div className="longNum">{this.state.longitud }</div>
           </div>
           <div className="gameInfo">
             {statusText}
@@ -183,6 +183,11 @@ class Game extends React.Component {
               />)}
           </div>
         </div>
+        {this.state.complete && 
+        <div className={"won"}>
+          JUEGO COMPLETADO
+          </div>
+        }
       </div>
     );
   }
