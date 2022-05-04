@@ -1,6 +1,6 @@
 body {
   width: 1250px;
-  height: 1250px;
+  height: fit-content;
   font: 14px "Century Gothic", Futura, sans-serif;
   background-color: black;
   margin: 20px;
@@ -95,10 +95,13 @@ body {
   text-transform: uppercase;
 }
 .menu {
-  background: #acf8b6;
-  border: 1px solid #7C7C7C;
-  list-style: circle;
-  
+  width: 150px;
+  height: 25px;
+  align-items: center;
+  background: white;
+  font: 14px "Century Gothic", Futura, sans-serif;
+  margin: 5px;
+  cursor: pointer;
 }
 
 .board {
@@ -109,6 +112,17 @@ body {
   height: fit-content;
   grid-template-columns: repeat(14, 40px);
   grid-template-rows: repeat(14, 40px);
+}
+
+.clickableBoard {
+  margin: 20px;
+  display: grid;
+  border: 3px solid white;
+  width: fit-content;
+  height: fit-content;
+  grid-template-columns: repeat(14, 40px);
+  grid-template-rows: repeat(14, 40px);
+  cursor: pointer;
 }
 
 .rightPanel {
@@ -180,9 +194,18 @@ body {
   font-size: 34px;
 }
 
+.wonText{
+  left: 48%;
+  color: white;
+  position:absolute;
+  top: 50%;
+
+  transform: translate(-50%,-50%);
+}
+
 .won > div {
   background: rgb(203,203,238);
-  border-color: bisque;
+  border-color: rgb(173, 22, 22);
   border-radius: 4px;
   padding: 10px;
   border: 3px solid white;

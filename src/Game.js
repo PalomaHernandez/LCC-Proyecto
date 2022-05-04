@@ -8,6 +8,8 @@ import Board from './Board';
 
 const colors = ["r", "v", "p", "g", "b", "y"];  // red, violet, pink, green, blue, yellow
 
+const grillas = [1, 2, 3];
+
 /**
  * Returns the CSS representation of the received color.
  */
@@ -48,25 +50,17 @@ class Game extends React.Component {
 
   handlePengineCreate(numGrid) {
 
-    if(numGrid === 4){
-    this.state.gridSelected=true;
-    }
+    if (this.state.gridSelected || this.state.playing)
+      return;
 
-    if(this.state.gridSelected || this.state.playing)
-    return;
+    var queryS = 'init1(Grid, LAdyacentes)';
 
-    var queryS= 'init1(Grid, LAdyacentes)';
-
-    if(numGrid === 1){
-    queryS = 'init1(Grid, LAdyacentes)';
+    if (numGrid === 2) {
+      queryS = 'init2(Grid, LAdyacentes)';
     }
-    if(numGrid === 2 ){
-    queryS = 'init2(Grid, LAdyacentes)';
+    if (numGrid === 3) {
+      queryS = 'init3(Grid, LAdyacentes)';
     }
-    if(numGrid === 3 ){
-    queryS = 'init3(Grid, LAdyacentes)';
-    }
-
 
     this.pengine.query(queryS, (success, response) => {
       if (success) {
@@ -80,13 +74,14 @@ class Game extends React.Component {
 
   handleClick(color) {
     // No action on click if game is complete or we are waiting.
-    if (this.state.complete || this.state.waiting ) {
+    if (this.state.complete || this.state.waiting) {
       return;
     }
-    if(this.state.playing === false){ 
-        this.setState({
-          playing: true
-        })  
+    if (this.state.playing === false) {
+      this.setState({
+        playing: true,
+        gridSelected: true
+      })
     }
     // Build Prolog query to apply the color flick.
     // The query will be like:
@@ -107,10 +102,10 @@ class Game extends React.Component {
 
     const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
 
-    const aux=JSON.stringify(this.state.adyacentesC).replaceAll('"', "");
+    const aux = JSON.stringify(this.state.adyacentesC).replaceAll('"', "");
     const queryS = `flick(${gridS}, ${color} , ${aux} , Grid, FAdyacentesC)`;
 
-    
+
     //const queryS = "flick(" + gridS + "," + color + ",[[0,0]],Grid)";
     console.log(queryS);
 
@@ -139,19 +134,15 @@ class Game extends React.Component {
         longitud: this.state.adyacentesC.length
       });
       //this.state.longitud = this.state.adyacentesC.length;
-      if(this.state.longitud === 196){
+      if (this.state.longitud === 196) {
         this.setState({
           complete: true
         })
       }
     });
   }
-  
+
   render() {
-    let statusText = "En juego";
-    if(this.state.complete){
-      statusText = "Termino el juego";
-    }
     if (this.state.grid === null) {
       return null;
     }
@@ -173,45 +164,46 @@ class Game extends React.Component {
           </div>
           <div className="longPanel">
             <div className="longLab">Celdas capturadas</div>
-            <div className="longNum">{this.state.longitud }</div>
+            <div className="longNum">{this.state.longitud}</div>
           </div>
-          <div className="gameInfo">
-            {statusText}
-            <div className= "menuPanel">
-              <div className= "menuGrilla">Cambiar grilla</div>
-                <button
-                onClick={() => this.handlePengineCreate(1)}
-                className= "menu ">1</button>
-                <button
-                onClick={() => this.handlePengineCreate(2)}
-                className= "menu ">2</button>
-                <button
-                onClick={() => this.handlePengineCreate(3)}
-                className= "menu ">3</button>
-                <button
-                onClick={() => this.handlePengineCreate(4)}
-                className= "menu ">Seleccionar Grilla</button>
-            </div>
-            </div>
-            </div>
-        <Board 
-        grid={this.state.grid} 
-        onOriginSelected ={this.state.playing ? undefined :
-          origin => {
-            this.setState({
-              playing: true,
-              adyacentesC: [origin],
-            })
+          {this.state.gridSelected === false &&
+          <div className="menuPanel">
+            <div className='menuGrilla'> Cambiar grilla </div>
+            {grillas.map(grilla =>
+              <button
+                className="menu"
+                onClick={() => this.handlePengineCreate(grilla)}
+              > {grilla} </button>)}
+            <button className='menu'
+              onClick={() => 
+                this.setState({
+                  gridSelected: true
+                })}
+            >
+              Seleccionar grilla
+            </button>
+          </div>
           }
-        }
-        origin={this.state.adyacentesC ? this.state.adyacentesC[0] : undefined}
+        </div>
+        <Board
+          grid={this.state.grid}
+          onOriginSelected={this.state.playing? undefined :
+            origin => {
+              this.setState({
+                playing: true,
+                adyacentesC: [origin],
+                gridSelected: true
+              })
+            }
+          }
+          origin={this.state.adyacentesC ? this.state.adyacentesC[0] : undefined}
         />
         <div className="rightPanel">
-        <div className="historialPanel">
+          <div className="historialPanel">
             <div className="historialLab">Historial de jugadas</div>
           </div>
           <div className="cellsPanel">
-          {(this.state.history).map(color =>
+            {(this.state.history).map(color =>
               <button
                 className="cells"
                 style={{ backgroundColor: colorToCss(color) }}
@@ -219,9 +211,11 @@ class Game extends React.Component {
               />)}
           </div>
         </div>
-        {this.state.complete && 
-        <div className={"won"}>
-          JUEGO COMPLETADO
+        {this.state.complete &&
+          <div className={"won"}>
+            <span class="wonText">
+              JUEGO COMPLETADO
+            </span>
           </div>
         }
       </div>
