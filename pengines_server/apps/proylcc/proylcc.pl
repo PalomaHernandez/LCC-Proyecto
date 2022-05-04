@@ -42,8 +42,7 @@ getColor(Grid, [X,Y], Color):-
 	nth0(Y, R, Color).
 
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % adyacentes(Lista, ListaAdy)    
 %
 % Lista es una lista de dos elementos que representa una coordenada de una grilla.
@@ -57,7 +56,7 @@ adyacentes([X,Y], ListaAdy):-
      ListaAdy= [[XS, Y],[XR,Y],[X,YS],[X,YR]].
 	 
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %   
 % setColor(+Grid, +Lista, +Color, -NewGrid)
 %
@@ -66,7 +65,7 @@ adyacentes([X,Y], ListaAdy):-
 % Color es el color que se le debe asignar a las posiciones pasadas en la lista
 % NewGrid es el resultado de cambiar el color de las posiciones de la grilla Grid que están dentro de la lista Lista. 
 
-setColor(Grid, [], _C, NewGrid).
+setColor(Grid, [], _C, Grid).
 
 setColor(Grid, [[X,Y]|Ls], Color, NewGrid):-
 	nth0(X, Grid, R),
@@ -76,7 +75,7 @@ setColor(Grid, [[X,Y]|Ls], Color, NewGrid):-
 	setColor(NewGridA,Ls,Color,NewGrid).
 
 
-&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % buscarAdyacentesC(+Grid, +AdyacentesC, +Color, -Lf)    
 %
