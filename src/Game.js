@@ -37,15 +37,37 @@ class Game extends React.Component {
       complete: false,  // true if game is complete, false otherwise
       waiting: false,
       playing: false,
-      adyacentesC: null
+      adyacentesC: null,
+      numGrid: 1,
+      gridSelected: false
     };
     this.handleClick = this.handleClick.bind(this);
     this.handlePengineCreate = this.handlePengineCreate.bind(this);
     this.pengine = new PengineClient(this.handlePengineCreate);
   }
 
-  handlePengineCreate() {
-    const queryS = 'init(Grid, LAdyacentes)';
+  handlePengineCreate(numGrid) {
+
+    if(numGrid === 4){
+    this.state.gridSelected=true;
+    }
+
+    if(this.state.gridSelected || this.state.playing)
+    return;
+
+    var queryS= 'init1(Grid, LAdyacentes)';
+
+    if(numGrid === 1){
+    queryS = 'init1(Grid, LAdyacentes)';
+    }
+    if(numGrid === 2 ){
+    queryS = 'init2(Grid, LAdyacentes)';
+    }
+    if(numGrid === 3 ){
+    queryS = 'init3(Grid, LAdyacentes)';
+    }
+
+
     this.pengine.query(queryS, (success, response) => {
       if (success) {
         this.setState({
@@ -155,8 +177,23 @@ class Game extends React.Component {
           </div>
           <div className="gameInfo">
             {statusText}
-          </div>
-        </div>
+            <div className= "menuPanel">
+              <div className= "menuGrilla">Cambiar grilla</div>
+                <button
+                onClick={() => this.handlePengineCreate(1)}
+                className= "menu ">1</button>
+                <button
+                onClick={() => this.handlePengineCreate(2)}
+                className= "menu ">2</button>
+                <button
+                onClick={() => this.handlePengineCreate(3)}
+                className= "menu ">3</button>
+                <button
+                onClick={() => this.handlePengineCreate(4)}
+                className= "menu ">Seleccionar Grilla</button>
+            </div>
+            </div>
+            </div>
         <Board 
         grid={this.state.grid} 
         onOriginSelected ={this.state.playing ? undefined :

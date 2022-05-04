@@ -1,4 +1,4 @@
-:- module(app_proylcc, 
+:- module(app_proylcc,
 	[]).
 :- use_module(library(pengines)).
 
