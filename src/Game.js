@@ -133,11 +133,8 @@ class Game extends React.Component {
       this.setState({
         longitud: this.state.adyacentesC.length
       });
-      
-      const cantFilas= this.state.grid.length;
-      const cantCol= this.state.grid[0].length;
-      
-      if (this.state.longitud === cantFilas * cantCol) {
+      //this.state.longitud = this.state.adyacentesC.length;
+      if (this.state.longitud === 196) {
         this.setState({
           complete: true
         })
