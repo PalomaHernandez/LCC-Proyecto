@@ -13,9 +13,7 @@ init1([
 		 [r,b,b,v,g,v,p,y,r,v,r,y,p,g],
 		 [v,b,g,v,v,r,g,y,b,b,b,b,r,y],
 		 [v,v,b,r,p,b,g,g,p,p,b,y,v,p],
-		 [r,p,g,y,v,y,r,b,v,r,b,y,r,v],
-		 [r,b,b,v,p,y,p,r,b,g,p,y,b,r],
-		 [v,g,p,b,v,v,g,g,g,b,v,g,g,g]
+		 [r,p,g,y,v,y,r,b,v,r,b,y,r,v]
 		 ], [[0,0]]).
 
 init2([
