@@ -49,10 +49,6 @@ class Game extends React.Component {
   }
 
   handlePengineCreate(numGrid) {
-
-    if (this.state.gridSelected || this.state.playing)
-      return;
-
     var queryS = 'init1(Grid, LAdyacentes)';
 
     if (numGrid === 2) {
@@ -142,6 +138,20 @@ class Game extends React.Component {
     });
   }
 
+  reiniciarJuego(){
+    this.setState({
+      turns: 0,
+      longitud: 1,
+      history: [],
+      complete: false,  // true if game is complete, false otherwise
+      waiting: false,
+      playing: false,
+      numGrid: 1,
+      gridSelected: false
+    })
+    this.handlePengineCreate(this.state.numGrid);
+  }
+
   render() {
     if (this.state.grid === null) {
       return null;
@@ -168,7 +178,7 @@ class Game extends React.Component {
           </div>
           {this.state.gridSelected === false &&
           <div className="menuPanel">
-            <div className='menuGrilla'> Cambiar grilla </div>
+            <div className='menuGrilla'> Seleccionar grilla </div>
             {grillas.map(grilla =>
               <button
                 className="menu"
@@ -179,9 +189,7 @@ class Game extends React.Component {
                 this.setState({
                   gridSelected: true
                 })}
-            >
-              Seleccionar grilla
-            </button>
+            > Seleccionar </button>
           </div>
           }
         </div>
@@ -216,7 +224,11 @@ class Game extends React.Component {
             <span class="wonText">
               JUEGO COMPLETADO
             </span>
-          </div>
+            <button className="reiniciarBtn"
+          onClick={() => this.reiniciarJuego()}>
+            Reinciar
+          </button>
+          </div> 
         }
       </div>
     );
