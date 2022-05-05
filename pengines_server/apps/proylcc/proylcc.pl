@@ -8,8 +8,10 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-%
-%
+% visitar(+Lista).
+% 
+% Visita todos los elementos X que estan contenidos en Lista, es decir, realiza
+% una inserción del predicado visitados con el elemento X.
 visitar([]).
 visitar([X|Xs]):- assert(visitados(X)), 
     			visitar(Xs).
@@ -80,7 +82,7 @@ setColor(Grid, [[X,Y]|Ls], Color, NewGrid):-
 % buscarAdyacentesC(+Grid, +AdyacentesC, +Color, -Lf)    
 %
 % Grid es la grilla actual.
-% AdyacentesC es la lista de adyacentes actual.
+% AdyacentesC es la lista de adyacentesC* actual.
 % Color es el color de los adyacentes de la lista AdyacentesC.
 % Lf es el resultado de buscar los adyacentesC de la lista AdyacentesC 
 
