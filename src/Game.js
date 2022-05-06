@@ -3,7 +3,7 @@ import PengineClient from './PengineClient';
 import Board from './Board';
 
 /**
- * List of colors.
+ * Lista de colores.
  */
 
 const colors = ["r", "v", "p", "g", "b", "y"];  // red, violet, pink, green, blue, yellow
@@ -11,7 +11,7 @@ const colors = ["r", "v", "p", "g", "b", "y"];  // red, violet, pink, green, blu
 const grillas = [1, 2, 3];
 
 /**
- * Returns the CSS representation of the received color.
+ * Devuelve la representación CSS del color recibido.
  */
 
 export function colorToCss(color) {
@@ -32,22 +32,26 @@ class Game extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      turns: 0,
-      grid: null,
-      longitud: 1,
-      history: [],
-      complete: false,  // true if game is complete, false otherwise
-      waiting: false,
-      playing: false,
-      adyacentesC: null,
-      numGrid: 1,
-      gridSelected: false
+      turns: 0, // cantidad de turnos realizados 
+      grid: null, // grilla del juego
+      longitud: 1, // longitud de la lista de adyacentesC
+      history: [], // representa el historial de jugadas
+      complete: false,  // verdadero si se completo el juego, falso en caso contrario
+      waiting: false, // verdadero se esta esperando una respuesta, falso en caso contrario
+      playing: false, // verdadero si se esta jugando una partida, falso en caso contrario
+      adyacentesC: null, // lista de las celdas adyacentesC
+      numGrid: 1, // numero asociado a una cierta grilla (por defecto es la numero 1)
+      gridSelected: false //verdadero si se confirmo la seleccion de una grilla, falso en caso contrario
     };
     this.handleClick = this.handleClick.bind(this);
     this.handlePengineCreate = this.handlePengineCreate.bind(this);
     this.pengine = new PengineClient(this.handlePengineCreate);
   }
 
+  /*
+  * Metodo que inicializa una grilla en base a un numero, a traves de una consulta a Prolog
+  * numGrid: numero asociado a una cierta grilla 
+  * */
   handlePengineCreate(numGrid) {
     var queryS = 'init1(Grid, LAdyacentes)';
 
@@ -68,19 +72,22 @@ class Game extends React.Component {
     });
   }
 
+  /*
+  * Metodo que actualiza la grilla en base a un color seleccionado
+  */
   handleClick(color) {
-    // No action on click if game is complete or we are waiting.
+    //Si el juego esta completo o esta esperando alguna respuesta, no realiza nada.
     if (this.state.complete || this.state.waiting) {
       return;
     }
+    
     if (this.state.playing === false) {
       this.setState({
         playing: true,
         gridSelected: true
       })
     }
-    // Build Prolog query to apply the color flick.
-    // The query will be like:
+    // Ejemplo de como realizar la consulta flick a Prolog:
     // flick([[g,g,b,g,v,y,p,v,b,p,v,p,v,r],
     //        [r,r,p,p,g,v,v,r,r,b,g,v,p,r],
     //        [b,v,g,y,b,g,r,g,p,g,p,r,y,y],
@@ -101,17 +108,13 @@ class Game extends React.Component {
     const aux = JSON.stringify(this.state.adyacentesC).replaceAll('"', "");
     const queryS = `flick(${gridS}, ${color} , ${aux} , Grid, FAdyacentesC)`;
 
-
-    //const queryS = "flick(" + gridS + "," + color + ",[[0,0]],Grid)";
-    console.log(queryS);
-
     this.setState({
       waiting: true
     });
 
     this.pengine.query(queryS, (success, response) => {
+      //si la consulta es exitosa (es decir, el color seleccionado no coincide con el color de adyacentesC)
       if (success) {
-        console.log("no fallo consulta");
         this.setState({
           grid: response['Grid'],
           adyacentesC: response['FAdyacentesC'],
@@ -119,9 +122,7 @@ class Game extends React.Component {
           waiting: false
         });
         (this.state.history).push(color);
-      } else {
-        console.log("fallo consulta");
-        // Prolog query will fail when the clicked color coincides with that in the top left cell.
+      } else { //si la consulta no es exitosa (caso contrario)
         this.setState({
           waiting: false
         });
@@ -129,8 +130,8 @@ class Game extends React.Component {
       this.setState({
         longitud: this.state.adyacentesC.length
       });
-      //this.state.longitud = this.state.adyacentesC.length;
-      if (this.state.longitud === 196) {
+      //si la longitud de la lista de adyacentesC es igual a la cantidad de celdas de la grilla 
+      if (this.state.longitud === (this.state.grid.length * this.state.grid[0].length)) {
         this.setState({
           complete: true
         })
@@ -138,12 +139,13 @@ class Game extends React.Component {
     });
   }
 
+  // Metodo que reinicia todas las propiedades del juego e inicializa la grilla por defecto
   reiniciarJuego(){
     this.setState({
       turns: 0,
       longitud: 1,
       history: [],
-      complete: false,  // true if game is complete, false otherwise
+      complete: false,  
       waiting: false,
       playing: false,
       numGrid: 1,
