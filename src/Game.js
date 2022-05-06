@@ -8,6 +8,10 @@ import Board from './Board';
 
 const colors = ["r", "v", "p", "g", "b", "y"];  // red, violet, pink, green, blue, yellow
 
+/**
+ * Lista de tipos de grillas.
+ */
+
 const grillas = [1, 2, 3];
 
 /**
@@ -80,7 +84,7 @@ class Game extends React.Component {
     if (this.state.complete || this.state.waiting) {
       return;
     }
-    
+
     if (this.state.playing === false) {
       this.setState({
         playing: true,
@@ -140,12 +144,12 @@ class Game extends React.Component {
   }
 
   // Metodo que reinicia todas las propiedades del juego e inicializa la grilla por defecto
-  reiniciarJuego(){
+  reiniciarJuego() {
     this.setState({
       turns: 0,
       longitud: 1,
       history: [],
-      complete: false,  
+      complete: false,
       waiting: false,
       playing: false,
       numGrid: 1,
@@ -179,25 +183,25 @@ class Game extends React.Component {
             <div className="longNum">{this.state.longitud}</div>
           </div>
           {this.state.gridSelected === false &&
-          <div className="menuPanel">
-            <div className='menuGrilla'> Seleccionar grilla </div>
-            {grillas.map(grilla =>
-              <button
-                className="menu"
-                onClick={() => this.handlePengineCreate(grilla)}
-              > {grilla} </button>)}
-            <button className='menu'
-              onClick={() => 
-                this.setState({
-                  gridSelected: true
-                })}
-            > Seleccionar </button>
-          </div>
+            <div className="menuPanel">
+              <div className='menuGrilla'> Seleccionar grilla </div>
+              {grillas.map(grilla =>
+                <button
+                  className="menu"
+                  onClick={() => this.handlePengineCreate(grilla)}
+                > {grilla} </button>)}
+              <button className='menu'
+                onClick={() =>
+                  this.setState({
+                    gridSelected: true
+                  })}
+              > Seleccionar </button>
+            </div>
           }
         </div>
         <Board
           grid={this.state.grid}
-          onOriginSelected={this.state.playing? undefined :
+          onOriginSelected={this.state.playing ? undefined :
             origin => {
               this.setState({
                 playing: true,
@@ -227,10 +231,10 @@ class Game extends React.Component {
               JUEGO COMPLETADO
             </span>
             <button className="reiniciarBtn"
-          onClick={() => this.reiniciarJuego()}>
-            Reinciar
-          </button>
-          </div> 
+              onClick={() => this.reiniciarJuego()}>
+              Reinciar
+            </button>
+          </div>
         }
       </div>
     );

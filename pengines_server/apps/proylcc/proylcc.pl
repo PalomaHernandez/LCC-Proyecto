@@ -12,9 +12,10 @@
 % 
 % Visita todos los elementos X que estan contenidos en Lista, es decir, realiza
 % una inserción del predicado visitados con el elemento X.
+
 visitar([]).
 visitar([X|Xs]):- assert(visitados(X)), 
-    			visitar(Xs).
+    			  visitar(Xs).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -45,10 +46,11 @@ getColor(Grid, [X,Y], Color):-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
 % adyacentes(Lista, ListaAdy)    
 %
-% Lista es una lista de dos elementos que representa una coordenada de una grilla.
-% ListaAdy es el resultado de calcular los adyacentes de esa coordenada en una grilla.
+% Lista es una lista de dos elementos que representa una coordenada de la grilla dada.
+% ListaAdy es el resultado de calcular los adyacentes de la coordenada dada en la grilla dada.
 
 adyacentes([X,Y], ListaAdy):-
 	 XS is X+1,
@@ -64,7 +66,7 @@ adyacentes([X,Y], ListaAdy):-
 %
 % Grid es la grilla actual.
 % Lista es la lista de posiciones de la grilla a la que se le debe cambiar el color.
-% Color es el color que se le debe asignar a las posiciones pasadas en la lista
+% Color es el color que se le debe asignar a las posiciones pasadas en la lista.
 % NewGrid es el resultado de cambiar el color de las posiciones de la grilla Grid que están dentro de la lista Lista. 
 
 setColor(Grid, [], _C, Grid).
@@ -83,19 +85,19 @@ setColor(Grid, [[X,Y]|Ls], Color, NewGrid):-
 %
 % Grid es la grilla actual.
 % AdyacentesC es la lista de adyacentesC* actual.
-% Color es el color de los adyacentes de la lista AdyacentesC.
-% Lf es el resultado de buscar los adyacentesC de la lista AdyacentesC 
+% Color es el color de los elementos de la lista AdyacentesC.
+% Lf es el resultado de buscar los adyacentesC* de cada elemento de la lista AdyacentesC. 
 
 buscarAdyacentesC(_,[],_ , []).
 
 buscarAdyacentesC(Grid,[[I,J]|L],Color, Lf):- 
-                adyacentes([I,J], La),
-                findall( [Y,X], (member([Y,X], La), getColor(Grid,[Y,X],Color), not(visitados([Y,X]))), Ls),
-                visitar(La),
-                buscarAdyacentesC(Grid,Ls, Color, Lm),
-                append(Ls,Lm,Lh),
-                buscarAdyacentesC(Grid,L, Color, Lt),
-                append(Lh,Lt,Lf).
+    adyacentes([I,J], La),
+    findall( [Y,X], (member([Y,X], La), getColor(Grid,[Y,X],Color), not(visitados([Y,X]))), Ls),
+    visitar(La),
+    buscarAdyacentesC(Grid,Ls, Color, Lm),
+    append(Ls,Lm,Lh),
+    buscarAdyacentesC(Grid,L, Color, Lt),
+    append(Lh,Lt,Lf).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -104,10 +106,10 @@ buscarAdyacentesC(Grid,[[I,J]|L],Color, Lf):-
 %
 % Grid es la grilla actual.
 % Color es el color seleccionado por el usuario.
-% AdyacentesC es la lista de adyacentes actual.
+% AdyacentesC es la lista de adyacentesC* actual.
 % FGrid es el resultado de hacer 'flick' de la grilla Grid con el color Color.
-% NewAdyacentesC es la lista actualizada de adyacentes.
-% Retorna false si Color coincide con el color del primer elemento de la lista de adyacentes (celda origen).
+% NewAdyacentesC es la lista actualizada de adyacentesC*.
+% Retorna false si Color coincide con el color del primer elemento de la lista adyacentesC (celda origen).
               
 
 flick(Grid, Color,AdyacentesC, FGrid, NewAdyacentesC):-
