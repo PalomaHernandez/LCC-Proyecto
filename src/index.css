@@ -15,7 +15,7 @@ body {
 
 .leftPanel {
   display: flex;
-  width: 450px;
+  width: 530px;
   height: fit-content;
   flex-direction: column;
   margin-right: 15px;
@@ -81,6 +81,8 @@ body {
 .longNum {
   margin-top: 10px;
 }
+
+
 
 .menuPanel {
   display: flex;
@@ -152,7 +154,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 30px;
   font-size: 20px;
   color: white;
 }
@@ -179,6 +181,44 @@ body {
   height: 30px;
   width: 30px;
   border: none;
+}
+
+.helpPanel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 40px;
+  font-size: 20px;
+  color: white;
+}
+
+.strategyLab {
+  display: flex;
+  align-items: center;
+  text-transform: uppercase;
+}
+
+.strategyNum{
+  display: flex;
+  align-items: center;
+  text-transform: uppercase;
+  margin-top: 15px;
+}
+
+.help {
+  width: 150px;
+  height: 30px;
+  align-items: center;
+  background: white;
+  font: 14px "Century Gothic", Futura, sans-serif;
+  margin-top: 30px;
+  margin: 15px;
+  cursor: pointer;
+}
+
+.help:hover {
+  outline: none;
+  border: 2px solid rgb(138, 133, 133);
 }
 
 .won {

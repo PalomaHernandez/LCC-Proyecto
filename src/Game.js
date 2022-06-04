@@ -45,7 +45,8 @@ class Game extends React.Component {
       playing: false, // verdadero si se esta jugando una partida, falso en caso contrario
       adyacentesC: null, // lista de las celdas adyacentesC
       numGrid: 1, // numero asociado a una cierta grilla (por defecto es la numero 1)
-      gridSelected: false //verdadero si se confirmo la seleccion de una grilla, falso en caso contrario
+      gridSelected: false, //verdadero si se confirmo la seleccion de una grilla, falso en caso contrario
+      profundidad: 0
     };
     this.handleClick = this.handleClick.bind(this);
     this.handlePengineCreate = this.handlePengineCreate.bind(this);
@@ -158,6 +159,14 @@ class Game extends React.Component {
     this.handlePengineCreate(this.state.numGrid);
   }
 
+  help(){
+
+  }
+
+  handleChange(event){
+    this.setState({profundidad: event.target.value});
+  }
+
   render() {
     if (this.state.grid === null) {
       return null;
@@ -182,6 +191,13 @@ class Game extends React.Component {
             <div className="longLab">Celdas capturadas</div>
             <div className="longNum">{this.state.longitud}</div>
           </div>
+          <div className= "helpPanel">
+            <div className= "strategyLab">Seleccionar Profundidad</div>
+            <input className="strategyNum" type='number' min='0' max='20' value={this.state.profundidad} onChange={(e) => this.setState({profundidad: e.target.value})}/>
+            <button className= 'help'
+            onClick={() => this.help()}
+            >Ayuda</button>
+          </div>
           {this.state.gridSelected === false &&
             <div className="menuPanel">
               <div className='menuGrilla'> Seleccionar grilla </div>
@@ -198,6 +214,7 @@ class Game extends React.Component {
               > Seleccionar </button>
             </div>
           }
+          
         </div>
         <Board
           grid={this.state.grid}
@@ -211,20 +228,22 @@ class Game extends React.Component {
             }
           }
           origin={this.state.adyacentesC ? this.state.adyacentesC[0] : undefined}
+          
         />
         <div className="rightPanel">
           <div className="historialPanel">
             <div className="historialLab">Historial de jugadas</div>
-          </div>
-          <div className="cellsPanel">
+            <div className="cellsPanel">
             {(this.state.history).map(color =>
               <button
                 className="cells"
                 style={{ backgroundColor: colorToCss(color) }}
                 key={color}
               />)}
+            </div>
           </div>
-        </div>
+          </div>
+       
         {this.state.complete &&
           <div className={"won"}>
             <span class="wonText">
