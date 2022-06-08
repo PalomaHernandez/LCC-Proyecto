@@ -46,7 +46,9 @@ class Game extends React.Component {
       adyacentesC: null, // lista de las celdas adyacentesC
       numGrid: 1, // numero asociado a una cierta grilla (por defecto es la numero 1)
       gridSelected: false, //verdadero si se confirmo la seleccion de una grilla, falso en caso contrario
-      profundidad: 0
+      profundidad: 0,
+      solucion: [],
+      adySolucion: 0
     };
     this.handleClick = this.handleClick.bind(this);
     this.handlePengineCreate = this.handlePengineCreate.bind(this);
@@ -160,8 +162,36 @@ class Game extends React.Component {
   }
 
   help(){
+    if (this.state.complete || this.state.waiting) {
+      return;
+    }
 
-  }
+    const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
+    const aux = JSON.stringify(this.state.adyacentesC).replaceAll('"', "");
+    const queryS = `help(${gridS},${aux},${this.state.profundidad}, Solucion, CantAdy)`;
+    
+    this.setState({
+      waiting: true
+    });
+
+    this.pengine.query(queryS, (success, response) => {
+      if (success) {
+        this.setState({
+          solucion: response['Solucion'],
+          adySolucion: response['CantAdy'],
+          waiting: false
+        });
+       console.log(this.state.solucion); 
+      } else { //si la consulta no es exitosa (caso contrario)
+        this.setState({
+          waiting: false
+        });
+      }
+      this.setState({
+        longitud: this.state.adyacentesC.length
+      });
+  });
+}
 
   handleChange(event){
     this.setState({profundidad: event.target.value});
@@ -251,7 +281,7 @@ class Game extends React.Component {
             </span>
             <button className="reiniciarBtn"
               onClick={() => this.reiniciarJuego()}>
-              Reinciar
+              Reiniciar
             </button>
           </div>
         }
