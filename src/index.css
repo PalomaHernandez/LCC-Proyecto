@@ -15,7 +15,8 @@ body {
 
 .leftPanel {
   display: flex;
-  width: 530px;
+  width: fit-content;
+  align-items: center;
   height: fit-content;
   flex-direction: column;
   margin-right: 15px;
@@ -82,8 +83,6 @@ body {
   margin-top: 10px;
 }
 
-
-
 .menuPanel {
   display: flex;
   flex-direction: column;
@@ -135,34 +134,26 @@ body {
   cursor: pointer;
 }
 
-.rightPanel {
+.historialPanel {
   display: flex;
   align-items: center;
-  width: 470px;
+  width: 280px;
   min-height: 300px;
   height: fit-content;
   flex-direction: column;
   margin: 30px;
   margin-left: 50px;
-  margin-top: 30px;
+  margin-top: 40px;
   font-size: 20px;
   color: white;
   border: 2px solid white;
-}
-
-.historialPanel {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 30px;
-  font-size: 20px;
-  color: white;
 }
 
 .historialLab {
   display: flex;
   align-items: center;
   text-transform: uppercase;
+  margin-top: 10px;
 }
 
 .cellsPanel {
@@ -193,13 +184,15 @@ body {
 }
 
 .strategyLab {
-  display: flex;
+  width: 300px;
+  margin-left: 15px;
   align-items: center;
   text-transform: uppercase;
 }
 
 .strategyNum{
   display: flex;
+  text-align: center;
   align-items: center;
   text-transform: uppercase;
   margin-top: 15px;

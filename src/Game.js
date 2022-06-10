@@ -146,6 +146,34 @@ class Game extends React.Component {
     });
   }
 
+adyacentesInicial(){
+  
+  const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
+  const aux = JSON.stringify(this.state.adyacentesC).replaceAll('"', "");
+  const queryS = `buscarAdyacentesC(${gridS}, ${aux} , Color, FAdyacentesC)`;
+
+  this.setState({
+    waiting: true
+  });
+
+  this.pengine.query(queryS, (success, response) => {
+    
+    if (success) {
+      this.setState({
+        adyacentesC: response['FAdyacentesC'],
+        waiting: false
+      });
+    } else { //si la consulta no es exitosa (caso contrario)
+      this.setState({
+        waiting: false
+      });
+    }
+    this.setState({
+      longitud: this.state.adyacentesC.length
+    });
+  });
+  }
+
   // Metodo que reinicia todas las propiedades del juego e inicializa la grilla por defecto
   reiniciarJuego() {
     this.setState({
@@ -166,6 +194,13 @@ class Game extends React.Component {
       return;
     }
 
+    if (this.state.playing === false) {
+      this.setState({
+        playing: true,
+        gridSelected: true
+      })
+      
+    }
     const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
     const aux = JSON.stringify(this.state.adyacentesC).replaceAll('"', "");
     const queryS = `help(${gridS},${aux},${this.state.profundidad}, Solucion, CantAdy)`;
@@ -210,7 +245,6 @@ class Game extends React.Component {
                 className="colorBtn"
                 style={{ backgroundColor: colorToCss(color) }}
                 onClick={() => this.handleClick(color)}
-                key={color}
               />)}
           </div>
           <div className="turnsPanel">
@@ -223,10 +257,37 @@ class Game extends React.Component {
           </div>
           <div className= "helpPanel">
             <div className= "strategyLab">Seleccionar Profundidad</div>
-            <input className="strategyNum" type='number' min='0' max='20' value={this.state.profundidad} onChange={(e) => this.setState({profundidad: e.target.value})}/>
+            <input className="strategyNum" 
+              type='number' min='1' max='20' value={this.state.profundidad} 
+              onChange={(e) => this.setState({profundidad: e.target.value})}/>
             <button className= 'help'
-            onClick={() => this.help()}
+              onClick={() => this.help()}
             >Ayuda</button>
+          </div>
+        </div>
+        <Board
+          grid={this.state.grid}
+          onOriginSelected={this.state.playing ? undefined :
+            origin => {
+              this.setState({
+                playing: true,
+                adyacentesC: [origin],
+                gridSelected: true
+              })
+            } 
+          }
+          origin={this.state.adyacentesC ? this.state.adyacentesC[0] : undefined}
+        />
+        <div className="rightPanel">
+          <div className="historialPanel">
+            <div className="historialLab">Historial de jugadas</div>
+            <div className="cellsPanel">
+            {(this.state.history).map(color =>
+              <button
+                className="cells"
+                style={{ backgroundColor: colorToCss(color) }}
+              />)}
+            </div>
           </div>
           {this.state.gridSelected === false &&
             <div className="menuPanel">
@@ -243,40 +304,12 @@ class Game extends React.Component {
                   })}
               > Seleccionar </button>
             </div>
-          }
-          
-        </div>
-        <Board
-          grid={this.state.grid}
-          onOriginSelected={this.state.playing ? undefined :
-            origin => {
-              this.setState({
-                playing: true,
-                adyacentesC: [origin],
-                gridSelected: true
-              })
-            }
-          }
-          origin={this.state.adyacentesC ? this.state.adyacentesC[0] : undefined}
-          
-        />
-        <div className="rightPanel">
-          <div className="historialPanel">
-            <div className="historialLab">Historial de jugadas</div>
-            <div className="cellsPanel">
-            {(this.state.history).map(color =>
-              <button
-                className="cells"
-                style={{ backgroundColor: colorToCss(color) }}
-                key={color}
-              />)}
-            </div>
+          }    
           </div>
-          </div>
-       
+          
         {this.state.complete &&
           <div className={"won"}>
-            <span class="wonText">
+            <span className='wonText'>
               JUEGO COMPLETADO
             </span>
             <button className="reiniciarBtn"

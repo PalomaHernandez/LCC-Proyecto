@@ -94,6 +94,7 @@ setColor(Grid, [[X,Y]|Ls], Color, NewGrid):-
 buscarAdyacentesC(_,[],_ , []).
 
 buscarAdyacentesC(Grid,[[I,J]|L],Color, Lf):- 
+    getColor(Grid, [I,J], Color),
     adyacentes([I,J], La),
     findall( [Y,X], (member([Y,X], La), getColor(Grid,[Y,X],Color), not(visitados([Y,X]))), Ls),
     visitar(La),
