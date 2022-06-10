@@ -48,7 +48,8 @@ class Game extends React.Component {
       gridSelected: false, //verdadero si se confirmo la seleccion de una grilla, falso en caso contrario
       profundidad: 0,
       solucion: [],
-      adySolucion: 0
+      adySolucion: 0,
+      selecciono: false
     };
     this.handleClick = this.handleClick.bind(this);
     this.handlePengineCreate = this.handlePengineCreate.bind(this);
@@ -74,7 +75,7 @@ class Game extends React.Component {
         this.setState({
           grid: response['Grid'],
           adyacentesC: response['LAdyacentes']
-        });
+        }, () => this.adyacentesInicial());
       }
     });
   }
@@ -147,20 +148,21 @@ class Game extends React.Component {
   }
 
 adyacentesInicial(){
-  
+
   const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
   const aux = JSON.stringify(this.state.adyacentesC).replaceAll('"', "");
-  const queryS = `buscarAdyacentesC(${gridS}, ${aux} , Color, FAdyacentesC)`;
+  const queryS = `adyCStar(${aux}, ${gridS}, FAdyacentesC)`;
 
   this.setState({
     waiting: true
   });
 
   this.pengine.query(queryS, (success, response) => {
-    
+
     if (success) {
       this.setState({
         adyacentesC: response['FAdyacentesC'],
+        longitud: response['FAdyacentesC'].length,
         waiting: false
       });
     } else { //si la consulta no es exitosa (caso contrario)
@@ -168,9 +170,6 @@ adyacentesInicial(){
         waiting: false
       });
     }
-    this.setState({
-      longitud: this.state.adyacentesC.length
-    });
   });
   }
 
@@ -272,11 +271,12 @@ adyacentesInicial(){
               this.setState({
                 playing: true,
                 adyacentesC: [origin],
-                gridSelected: true
-              })
-            } 
+                gridSelected: true,
+              }, () => this.adyacentesInicial())
+            }
           }
-          origin={this.state.adyacentesC ? this.state.adyacentesC[0] : undefined}
+          origin={this.state.adyacentesC ? this.state.adyacentesC[0]: undefined}
+          //inicial={this.adyacentesInicial()}
         />
         <div className="rightPanel">
           <div className="historialPanel">
