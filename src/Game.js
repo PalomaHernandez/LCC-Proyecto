@@ -147,30 +147,30 @@ class Game extends React.Component {
     });
   }
 
-adyacentesInicial(){
+  adyacentesInicial() {
 
-  const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
-  const aux = JSON.stringify(this.state.adyacentesC).replaceAll('"', "");
-  const queryS = `adyCStar(${aux}, ${gridS}, FAdyacentesC)`;
+    const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
+    const aux = JSON.stringify(this.state.adyacentesC).replaceAll('"', "");
+    const queryS = `adyCStar(${aux}, ${gridS}, FAdyacentesC)`;
 
-  this.setState({
-    waiting: true
-  });
+    this.setState({
+      waiting: true
+    });
 
-  this.pengine.query(queryS, (success, response) => {
+    this.pengine.query(queryS, (success, response) => {
 
-    if (success) {
-      this.setState({
-        adyacentesC: response['FAdyacentesC'],
-        longitud: response['FAdyacentesC'].length,
-        waiting: false
-      });
-    } else { //si la consulta no es exitosa (caso contrario)
-      this.setState({
-        waiting: false
-      });
-    }
-  });
+      if (success) {
+        this.setState({
+          adyacentesC: response['FAdyacentesC'],
+          longitud: response['FAdyacentesC'].length,
+          waiting: false
+        });
+      } else { //si la consulta no es exitosa (caso contrario)
+        this.setState({
+          waiting: false
+        });
+      }
+    });
   }
 
   // Metodo que reinicia todas las propiedades del juego e inicializa la grilla por defecto
@@ -188,7 +188,7 @@ adyacentesInicial(){
     this.handlePengineCreate(this.state.numGrid);
   }
 
-  help(){
+  helpOptimal() {
     if (this.state.complete || this.state.waiting) {
       return;
     }
@@ -196,14 +196,13 @@ adyacentesInicial(){
     if (this.state.playing === false) {
       this.setState({
         playing: true,
-        gridSelected: true
+        gridSelected: true,
       })
-      
     }
     const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
     const aux = JSON.stringify(this.state.adyacentesC).replaceAll('"', "");
     const queryS = `help(${gridS},${aux},${this.state.profundidad}, Solucion, CantAdy)`;
-    
+
     this.setState({
       waiting: true
     });
@@ -213,10 +212,13 @@ adyacentesInicial(){
         this.setState({
           solucion: response['Solucion'],
           adySolucion: response['CantAdy'],
-          waiting: false
+          waiting: false,
+          selecciono: true
         });
-       console.log(this.state.solucion); 
+        console.log(this.state.solucion);
+        console.log(this.state.adySolucion);
       } else { //si la consulta no es exitosa (caso contrario)
+        console.log("fallo consulta");
         this.setState({
           waiting: false
         });
@@ -224,16 +226,61 @@ adyacentesInicial(){
       this.setState({
         longitud: this.state.adyacentesC.length
       });
-  });
-}
+    });
+  }
 
-  handleChange(event){
-    this.setState({profundidad: event.target.value});
+  helpGreedy() {
+    if (this.state.complete || this.state.waiting) {
+      return;
+    }
+
+    if (this.state.playing === false) {
+      this.setState({
+        playing: true,
+        gridSelected: true,
+      })
+
+    }
+    const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
+    const aux = JSON.stringify(this.state.adyacentesC).replaceAll('"', "");
+    const queryS = `help(${gridS},${aux},${this.state.profundidad}, Solucion, CantAdy)`;
+
+    this.setState({
+      waiting: true
+    });
+
+    this.pengine.query(queryS, (success, response) => {
+      if (success) {
+        this.setState({
+          solucion: response['Solucion'],
+          adySolucion: response['CantAdy'],
+          waiting: false,
+          solucion: true
+        });
+        console.log(this.state.solucion);
+        console.log(this.state.adySolucion);
+      } else { //si la consulta no es exitosa (caso contrario)
+        console.log("fallo consulta");
+        this.setState({
+          waiting: false
+        });
+      }
+      this.setState({
+        longitud: this.state.adyacentesC.length
+      });
+    });
+  }
+
+  handleChange(event) {
+    this.setState({ profundidad: event.target.value });
   }
 
   render() {
     if (this.state.grid === null) {
       return null;
+    }
+    if(this.state.adyacentesC.length !== null && this.state.adyacentesC.length>= this.state.adySolucion){
+      this.state.selecciono=false;
     }
     return (
       <div className="game">
@@ -254,15 +301,31 @@ adyacentesInicial(){
             <div className="longLab">Celdas capturadas</div>
             <div className="longNum">{this.state.longitud}</div>
           </div>
-          <div className= "helpPanel">
-            <div className= "strategyLab">Seleccionar Profundidad</div>
-            <input className="strategyNum" 
-              type='number' min='1' max='20' value={this.state.profundidad} 
-              onChange={(e) => this.setState({profundidad: e.target.value})}/>
-            <button className= 'help'
-              onClick={() => this.help()}
-            >Ayuda</button>
+          <div className="helpPanel">
+            <div className="strategyLab">Seleccionar Profundidad</div>
+            <input className="strategyNum"
+              type='number' min='1' max='20' value={this.state.profundidad}
+              onChange={(e) => this.setState({ profundidad: e.target.value })} />
+            <button className='help'
+              onClick={() => this.helpOptimal()}
+            >Ayuda optimal</button>
           </div>
+          <button className='help'
+            onClick={() => this.helpGreedy()}
+          >Ayuda greedy</button>
+          {this.state.selecciono === true &&
+            <div className="movPanel">
+              <div className="historialLab">Movimientos: </div>
+              <div className="movCellsPanel">
+                {this.state.solucion.map(color =>
+                  <button
+                    className="cells"
+                    style={{ backgroundColor: colorToCss(color) }}
+                  />)}
+              </div>
+              <div className="movLab">Cantidad de celdas a capturar:</div>
+              <div className="movLab">{this.state.adySolucion}</div>
+            </div>}
         </div>
         <Board
           grid={this.state.grid}
@@ -275,18 +338,17 @@ adyacentesInicial(){
               }, () => this.adyacentesInicial())
             }
           }
-          origin={this.state.adyacentesC ? this.state.adyacentesC[0]: undefined}
-          //inicial={this.adyacentesInicial()}
+          origin={this.state.adyacentesC ? this.state.adyacentesC[0] : undefined}
         />
         <div className="rightPanel">
           <div className="historialPanel">
             <div className="historialLab">Historial de jugadas</div>
             <div className="cellsPanel">
-            {(this.state.history).map(color =>
-              <button
-                className="cells"
-                style={{ backgroundColor: colorToCss(color) }}
-              />)}
+              {(this.state.history).map(color =>
+                <button
+                  className="cells"
+                  style={{ backgroundColor: colorToCss(color) }}
+                />)}
             </div>
           </div>
           {this.state.gridSelected === false &&
@@ -304,9 +366,9 @@ adyacentesInicial(){
                   })}
               > Seleccionar </button>
             </div>
-          }    
-          </div>
-          
+          }
+        </div>
+
         {this.state.complete &&
           <div className={"won"}>
             <span className='wonText'>
