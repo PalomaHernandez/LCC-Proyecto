@@ -94,6 +94,7 @@ body {
   display: flex;
   align-items: center;
   text-transform: uppercase;
+  margin-bottom: 10px;
 }
 
 .menu {
@@ -180,8 +181,17 @@ body {
   color: white;
 }
 
+.btnsHelpPanel {
+  display: inline-block;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+  font-size: 20px;
+  color: white;
+}
+
 .strategyLab {
-  width: 420px;
+  width: 410px;
   text-align: center;
   margin-left: 15px;
   align-items: center;
@@ -193,7 +203,8 @@ body {
   text-align: center;
   align-items: center;
   text-transform: uppercase;
-  margin: 15px;
+  margin: 10px;
+  margin-top: 20px;
 }
 
 .help {
@@ -216,7 +227,7 @@ body {
   align-items: center;
   height: fit-content;
   flex-direction: column;
-  margin: 10px;
+  margin-top: 15px;
   color: white;
   font-size: 20px;
   border: 2px solid white;
@@ -234,14 +245,14 @@ body {
 .movCellsPanel {
   display: inline-block;
   align-items: center;
-  margin-right: 1px;
+  margin-left: 13px;
   margin-top: 10px;
 }
 
 .won {
   position: absolute;
   background: rgba(255, 255, 255, 0.283);
-  width: 1230px;
+  width: 1390px;
   height: 100%;
   display: flex;
   align-items: center;
@@ -250,7 +261,7 @@ body {
 }
 
 .wonText {
-  left: 48%;
+  left: 53%;
   color: white;
   position: absolute;
   top: 47%;
@@ -267,7 +278,7 @@ body {
   font: 14px "Century Gothic", Futura, sans-serif;
   margin: 8px;
   cursor: pointer;
-  left: 47%;
+  left: 52%;
   position: absolute;
   top: 53%;
 

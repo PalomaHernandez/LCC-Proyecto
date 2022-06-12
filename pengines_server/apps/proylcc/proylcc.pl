@@ -141,6 +141,7 @@ listaSinColor(Color, Colors):-
     remove(Color, [r,v,p,g,b,y], Colors).
 
 help(Grid, AdyacentesC, N, Solucion, CantAdyacentes):-
+    N > 0,
 	predicadoOne(Grid,AdyacentesC,N, [], Resultado),
     caminosPosibles(Resultado, CaminosPosibles), !,
     sort(2, @>=, CaminosPosibles, LFSolucionesAux),
@@ -177,7 +178,6 @@ predicadoAll(R, N,Resul):-
     predicadoAll( Ls, N,Re),
     append(Re,Res,Resul).
 
-
 caminoPorNivel(Grid, Colors, AdyacentesC, Secuencia, Resultado):-
     findall([NewGrid, NewSecuencia, NewAdyacentesC], (member(C, Colors), flick(Grid, 
     C,AdyacentesC, NewGrid, NewAdyacentesC), 
@@ -187,6 +187,7 @@ caminoPorNivel(Grid, Colors, AdyacentesC, Secuencia, Resultado):-
     Resultado), !.
 
 helpGreedy(Grid, AdyacentesC, N, Solucion, CantAdyacentes):-
+    N > 0,
 	predicadoUno(Grid,AdyacentesC,N,[], Resultado),
 	Resultado = [CantAdyacentes, _NewGrid, Solucion, _NewAdyacentesC].
 
@@ -213,4 +214,3 @@ caminoPorNivel2(Grid, Colors, AdyacentesC, Secuencia, Resultado):-
     Long1 > Long2,
 	append(Secuencia, [C], NewSecuencia)),
     Resultado), !.
-

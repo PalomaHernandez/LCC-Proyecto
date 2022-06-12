@@ -187,7 +187,8 @@ class Game extends React.Component {
       waiting: false,
       playing: false,
       numGrid: 1,
-      gridSelected: false
+      gridSelected: false,
+      profundidad: 0
     })
     this.handlePengineCreate(this.state.numGrid);
   }
@@ -197,12 +198,6 @@ class Game extends React.Component {
       return;
     }
 
-    if (this.state.playing === false) {
-      this.setState({
-        playing: true,
-        gridSelected: true,
-      })
-    }
     const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
     const aux = JSON.stringify(this.state.adyacentesC).replaceAll('"', "");
     const queryS = `help(${gridS},${aux},${this.state.profundidad}, Solucion, CantAdy)`;
@@ -213,14 +208,20 @@ class Game extends React.Component {
 
     this.pengine.query(queryS, (success, response) => {
       if (success) {
+        if (this.state.playing === false) {
+          this.setState({
+            playing: true,
+            gridSelected: true,
+          })
+        }
         this.setState({
           solucionOptimal: response['Solucion'],
           adySolucionOp: response['CantAdy'],
           waiting: false,
           helpO_visible: true
         });
-        console.log(this.state.solucion);
-        console.log(this.state.adySolucion);
+        console.log(this.state.solucionOptimal);
+        console.log(this.state.adySolucionOp);
       } else { //si la consulta no es exitosa (caso contrario)
         console.log("fallo consulta");
         this.setState({
@@ -238,13 +239,6 @@ class Game extends React.Component {
       return;
     }
 
-    if (this.state.playing === false) {
-      this.setState({
-        playing: true,
-        gridSelected: true,
-      })
-
-    }
     const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
     const aux = JSON.stringify(this.state.adyacentesC).replaceAll('"', "");
     const queryS = `helpGreedy(${gridS},${aux},${this.state.profundidad}, Solucion, CantAdy)`;
@@ -255,14 +249,20 @@ class Game extends React.Component {
 
     this.pengine.query(queryS, (success, response) => {
       if (success) {
+        if (this.state.playing === false) {
+          this.setState({
+            playing: true,
+            gridSelected: true,
+          })
+        }
         this.setState({
           solucionGreedy: response['Solucion'],
           adySolucionG: response['CantAdy'],
           waiting: false,
           helpG_visible: true
         });
-        console.log(this.state.solucion);
-        console.log(this.state.adySolucion);
+        console.log(this.state.solucionGreedy);
+        console.log(this.state.adySolucionG);
       } else { //si la consulta no es exitosa (caso contrario)
         console.log("fallo consulta");
         this.setState({
@@ -283,17 +283,19 @@ class Game extends React.Component {
     if (this.state.grid === null) {
       return null;
     }
-    if(this.state.longitud !== null && this.state.longitud >= this.state.adySolucion){
-      this.state.helpG_visible = false;
-      this.state.helpO_visible = false;
+    if(this.state.longitud >= this.state.adySolucionOp){
+      this.state.helpO_visible=false;
+    }
+    if(this.state.longitud >= this.state.adySolucionG){
+      this.state.helpG_visible=false;
     }
     return (
       <div className="game">
         <div className="leftPanel">
-          <div className="buttonsPanel">
+          <div className="buttonsPanel" >
             {colors.map(color =>
               <button
-                className="colorBtn"
+                className="colorBtn" key = {color}
                 style={{ backgroundColor: colorToCss(color) }}
                 onClick={() => this.handleClick(color)}
               />)}
@@ -309,22 +311,24 @@ class Game extends React.Component {
           <div className="helpPanel">
             <div className="strategyLab">Seleccionar Profundidad</div>
             <input className="strategyNum"
-              type='number' min='1' max='20' value={this.state.profundidad}
+              type='number' min='1' max='25' value={this.state.profundidad}
               onChange={(e) => this.setState({ profundidad: e.target.value })} />
+            <div className="btnsHelpPanel">
             <button className='help'
               onClick={() => this.helpOptimal()}
             >Ayuda optimal</button>
             <button className='help'
             onClick={() => this.helpGreedy()}
-          >Ayuda greedy</button>
+            >Ayuda greedy</button>
+            </div>  
           </div>
           {this.state.helpO_visible === true &&
             <div className="movPanel">
               <div className="historialLab">Movimientos de la ayuda optimal: </div>
               <div className="movCellsPanel">
-                {this.state.solucionOptimal.map(color =>
-                  <button
-                    className="cells"
+                {this.state.solucionOptimal.map((color,idx) => 
+                  <button  key = {idx}
+                    className="cells"  
                     style={{ backgroundColor: colorToCss(color) }}
                   />)}
               </div>
@@ -335,9 +339,9 @@ class Game extends React.Component {
             <div className="movPanel">
               <div className="historialLab">Movimientos de la ayuda greedy: </div>
               <div className="movCellsPanel">
-                {this.state.solucionGreedy.map(color =>
-                  <button
-                    className="cells"
+                {this.state.solucionGreedy.map((color,idx) =>
+                  <button key = {idx}
+                    className="cells"  
                     style={{ backgroundColor: colorToCss(color) }}
                   />)}
               </div>
@@ -361,10 +365,10 @@ class Game extends React.Component {
         <div className="rightPanel">
           <div className="historialPanel">
             <div className="historialLab">Historial de jugadas</div>
-            <div className="cellsPanel">
-              {(this.state.history).map(color =>
-                <button
-                  className="cells"
+            <div className="cellsPanel" >
+              {(this.state.history).map((color,idx) => 
+                <button key={idx}
+                  className="cells"  
                   style={{ backgroundColor: colorToCss(color) }}
                 />)}
             </div>
@@ -374,7 +378,7 @@ class Game extends React.Component {
               <div className='menuGrilla'> Seleccionar grilla </div>
               {grillas.map(grilla =>
                 <button
-                  className="menu"
+                  className="menu"  key = {grilla}
                   onClick={() => this.handlePengineCreate(grilla)}
                 > {grilla} </button>)}
               <button className='menu'
