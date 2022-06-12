@@ -186,3 +186,31 @@ caminoPorNivel(Grid, Colors, AdyacentesC, Secuencia, Resultado):-
 	append(Secuencia, [C], NewSecuencia)),
     Resultado), !.
 
+helpGreedy(Grid, AdyacentesC, N, Solucion, CantAdyacentes):-
+	predicadoUno(Grid,AdyacentesC,N,[], Resultado),
+	Resultado = [CantAdyacentes, _NewGrid, Solucion, _NewAdyacentesC].
+
+predicadoUno(Grid, AdyacentesC, N, Secuencia, Resultado):-
+    N1 is N -1,
+    AdyacentesC=[A|_],
+    color(Grid, A, Color),
+    listaSinColor(Color, Colors),
+    caminoPorNivel2(Grid, Colors, AdyacentesC, Secuencia, R),
+    sort(0, @>=, R, RAux),
+	nth0(0, RAux, Mov),	
+    predicadoTodos(Mov, N1,Resultado), !.
+   
+
+predicadoTodos(R, 0, R):-!.
+predicadoTodos(R, N,Resul):-
+    R=[ _LongitudAdy, NewGrid, NewSecuencia, NewAdyacentesC],
+    predicadoUno(NewGrid, NewAdyacentesC, N,  NewSecuencia, Resul).
+
+caminoPorNivel2(Grid, Colors, AdyacentesC, Secuencia, Resultado):-
+    findall([Long1,NewGrid, NewSecuencia, NewAdyacentesC], (member(C, Colors), flick(Grid, 
+    C,AdyacentesC, NewGrid, NewAdyacentesC), 
+    length(NewAdyacentesC,Long1),length(AdyacentesC,Long2),
+    Long1 > Long2,
+	append(Secuencia, [C], NewSecuencia)),
+    Resultado), !.
+

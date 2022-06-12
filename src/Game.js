@@ -47,10 +47,12 @@ class Game extends React.Component {
       numGrid: 1, // numero asociado a una cierta grilla (por defecto es la numero 1)
       gridSelected: false, // verdadero si se confirmo la seleccion de una grilla, falso en caso contrario
       profundidad: 0, // cantidad maxima de movimientos que se mostraran por ayuda
-      solucion: [], // secuencia de movimientos que hacen a la mejor jugada
-      adySolucion: 0, // cantidad de adyacentesC luego de completar una solucion de ayuda
-      helpO_visible: false, // verdadero si se pidio ayuda optimal, falso en caso contrario
-      helpG_visible: false // verdadero si se pidio ayuda greedy, falso en caso contrario
+      solucionOptimal: [], // secuencia de movimientos que hacen a la mejor jugada con la ayuda Optimal
+      adySolucionOp: 0, // cantidad de adyacentesC luego de completar una solucion de ayuda Optimal
+      solucionGreedy: [], // secuencia de movimientos que hacen a la mejor jugada con la ayuda Greedy
+      adySolucionG: 0, // cantidad de adyacentesC luego de completar una solucion de ayuda Greedy
+      helpO_visible: false, // verdadero si se pidio ayuda Optimal, falso en caso contrario
+      helpG_visible: false // verdadero si se pidio ayuda Greedy, falso en caso contrario
 
     };
     this.handleClick = this.handleClick.bind(this);
@@ -212,8 +214,8 @@ class Game extends React.Component {
     this.pengine.query(queryS, (success, response) => {
       if (success) {
         this.setState({
-          solucion: response['Solucion'],
-          adySolucion: response['CantAdy'],
+          solucionOptimal: response['Solucion'],
+          adySolucionOp: response['CantAdy'],
           waiting: false,
           helpO_visible: true
         });
@@ -245,7 +247,7 @@ class Game extends React.Component {
     }
     const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
     const aux = JSON.stringify(this.state.adyacentesC).replaceAll('"', "");
-    const queryS = `help(${gridS},${aux},${this.state.profundidad}, Solucion, CantAdy)`;
+    const queryS = `helpGreedy(${gridS},${aux},${this.state.profundidad}, Solucion, CantAdy)`;
 
     this.setState({
       waiting: true
@@ -254,8 +256,8 @@ class Game extends React.Component {
     this.pengine.query(queryS, (success, response) => {
       if (success) {
         this.setState({
-          solucion: response['Solucion'],
-          adySolucion: response['CantAdy'],
+          solucionGreedy: response['Solucion'],
+          adySolucionG: response['CantAdy'],
           waiting: false,
           helpG_visible: true
         });
@@ -281,11 +283,9 @@ class Game extends React.Component {
     if (this.state.grid === null) {
       return null;
     }
-    if(this.state.adyacentesC.length !== null && this.state.adyacentesC.length>= this.state.adySolucion){
-      this.setState({
-        helpO_visible: false,
-        helpG_visible: false
-      })
+    if(this.state.longitud !== null && this.state.longitud >= this.state.adySolucion){
+      this.state.helpG_visible = false;
+      this.state.helpO_visible = false;
     }
     return (
       <div className="game">
@@ -314,22 +314,35 @@ class Game extends React.Component {
             <button className='help'
               onClick={() => this.helpOptimal()}
             >Ayuda optimal</button>
-          </div>
-          <button className='help'
+            <button className='help'
             onClick={() => this.helpGreedy()}
           >Ayuda greedy</button>
+          </div>
           {this.state.helpO_visible === true &&
             <div className="movPanel">
-              <div className="historialLab">Movimientos: </div>
+              <div className="historialLab">Movimientos de la ayuda optimal: </div>
               <div className="movCellsPanel">
-                {this.state.solucion.map(color =>
+                {this.state.solucionOptimal.map(color =>
                   <button
                     className="cells"
                     style={{ backgroundColor: colorToCss(color) }}
                   />)}
               </div>
               <div className="movLab">Cantidad de celdas a capturar:</div>
-              <div className="movLab">{this.state.adySolucion}</div>
+              <div className="movLab">{this.state.adySolucionOp}</div>
+            </div>}
+            {this.state.helpG_visible === true &&
+            <div className="movPanel">
+              <div className="historialLab">Movimientos de la ayuda greedy: </div>
+              <div className="movCellsPanel">
+                {this.state.solucionGreedy.map(color =>
+                  <button
+                    className="cells"
+                    style={{ backgroundColor: colorToCss(color) }}
+                  />)}
+              </div>
+              <div className="movLab">Cantidad de celdas a capturar:</div>
+              <div className="movLab">{this.state.adySolucionG}</div>
             </div>}
         </div>
         <Board
