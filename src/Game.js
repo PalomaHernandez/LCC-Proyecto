@@ -45,11 +45,13 @@ class Game extends React.Component {
       playing: false, // verdadero si se esta jugando una partida, falso en caso contrario
       adyacentesC: null, // lista de las celdas adyacentesC
       numGrid: 1, // numero asociado a una cierta grilla (por defecto es la numero 1)
-      gridSelected: false, //verdadero si se confirmo la seleccion de una grilla, falso en caso contrario
-      profundidad: 0,
-      solucion: [],
-      adySolucion: 0,
-      selecciono: false
+      gridSelected: false, // verdadero si se confirmo la seleccion de una grilla, falso en caso contrario
+      profundidad: 0, // cantidad maxima de movimientos que se mostraran por ayuda
+      solucion: [], // secuencia de movimientos que hacen a la mejor jugada
+      adySolucion: 0, // cantidad de adyacentesC luego de completar una solucion de ayuda
+      helpO_visible: false, // verdadero si se pidio ayuda optimal, falso en caso contrario
+      helpG_visible: false // verdadero si se pidio ayuda greedy, falso en caso contrario
+
     };
     this.handleClick = this.handleClick.bind(this);
     this.handlePengineCreate = this.handlePengineCreate.bind(this);
@@ -213,7 +215,7 @@ class Game extends React.Component {
           solucion: response['Solucion'],
           adySolucion: response['CantAdy'],
           waiting: false,
-          selecciono: true
+          helpO_visible: true
         });
         console.log(this.state.solucion);
         console.log(this.state.adySolucion);
@@ -255,7 +257,7 @@ class Game extends React.Component {
           solucion: response['Solucion'],
           adySolucion: response['CantAdy'],
           waiting: false,
-          solucion: true
+          helpG_visible: true
         });
         console.log(this.state.solucion);
         console.log(this.state.adySolucion);
@@ -280,7 +282,10 @@ class Game extends React.Component {
       return null;
     }
     if(this.state.adyacentesC.length !== null && this.state.adyacentesC.length>= this.state.adySolucion){
-      this.state.selecciono=false;
+      this.setState({
+        helpO_visible: false,
+        helpG_visible: false
+      })
     }
     return (
       <div className="game">
@@ -313,7 +318,7 @@ class Game extends React.Component {
           <button className='help'
             onClick={() => this.helpGreedy()}
           >Ayuda greedy</button>
-          {this.state.selecciono === true &&
+          {this.state.helpO_visible === true &&
             <div className="movPanel">
               <div className="historialLab">Movimientos: </div>
               <div className="movCellsPanel">
