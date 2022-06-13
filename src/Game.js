@@ -151,6 +151,9 @@ class Game extends React.Component {
     });
   }
 
+  /*
+  * Método que calcula las celdas adyacentesC* a partir de la celda origen.
+  */
   adyacentesInicial() {
 
     const gridS = JSON.stringify(this.state.grid).replaceAll('"', "");
@@ -162,7 +165,7 @@ class Game extends React.Component {
     });
 
     this.pengine.query(queryS, (success, response) => {
-
+      // si la consulta tiene éxito
       if (success) {
         this.setState({
           adyacentesC: response['FAdyacentesC'],
@@ -194,6 +197,7 @@ class Game extends React.Component {
   }
 
   helpOptimal() {
+    // si no se completo el juego o se esta esperando una respuesta del servidor Prolog
     if (this.state.complete || this.state.waiting) {
       return;
     }
@@ -207,7 +211,9 @@ class Game extends React.Component {
     });
 
     this.pengine.query(queryS, (success, response) => {
+      // si la consulta tiene éxito
       if (success) {
+        // si no se comenzo a jugar la partida
         if (this.state.playing === false) {
           this.setState({
             playing: true,
@@ -235,6 +241,7 @@ class Game extends React.Component {
   }
 
   helpGreedy() {
+    // si no se completo el juego o se esta esperando una respuesta del servidor Prolog
     if (this.state.complete || this.state.waiting) {
       return;
     }
@@ -249,6 +256,7 @@ class Game extends React.Component {
 
     this.pengine.query(queryS, (success, response) => {
       if (success) {
+        // si no se comenzo a jugar la partida
         if (this.state.playing === false) {
           this.setState({
             playing: true,
@@ -275,19 +283,25 @@ class Game extends React.Component {
     });
   }
 
+  /*
+  * Método que actualiza el valor de profundidad
+  */
   handleChange(event) {
     this.setState({ profundidad: event.target.value });
   }
 
   render() {
+    // si la grilla no esta inicializada
     if (this.state.grid === null) {
       return null;
     }
-    if(this.state.longitud >= this.state.adySolucionOp){
-      this.state.helpO_visible=false;
+    // si la cantidad de celdas capturadas actualmente es mayor o igual a la cantidad de celdas capturadas por la ayuda Optimal
+    if (this.state.longitud >= this.state.adySolucionOp) {
+      this.state.helpO_visible = false;
     }
-    if(this.state.longitud >= this.state.adySolucionG){
-      this.state.helpG_visible=false;
+    // si la cantidad de celdas capturadas actualmente es mayor o igual a la cantidad de celdas capturadas por la ayuda Greedy
+    if (this.state.longitud >= this.state.adySolucionG) {
+      this.state.helpG_visible = false;
     }
     return (
       <div className="game">
@@ -295,7 +309,7 @@ class Game extends React.Component {
           <div className="buttonsPanel" >
             {colors.map(color =>
               <button
-                className="colorBtn" key = {color}
+                className="colorBtn" key={color}
                 style={{ backgroundColor: colorToCss(color) }}
                 onClick={() => this.handleClick(color)}
               />)}
@@ -311,37 +325,37 @@ class Game extends React.Component {
           <div className="helpPanel">
             <div className="strategyLab">Seleccionar Profundidad</div>
             <input className="strategyNum"
-              type='number' min='1' max='25' value={this.state.profundidad}
+              type='number' min='1' max='20' value={this.state.profundidad}
               onChange={(e) => this.setState({ profundidad: e.target.value })} />
             <div className="btnsHelpPanel">
-            <button className='help'
-              onClick={() => this.helpOptimal()}
-            >Ayuda optimal</button>
-            <button className='help'
-            onClick={() => this.helpGreedy()}
-            >Ayuda greedy</button>
-            </div>  
+              <button className='help'
+                onClick={() => this.helpOptimal()}
+              >Ayuda optimal</button>
+              <button className='help'
+                onClick={() => this.helpGreedy()}
+              >Ayuda greedy</button>
+            </div>
           </div>
           {this.state.helpO_visible === true &&
             <div className="movPanel">
               <div className="historialLab">Movimientos de la ayuda optimal: </div>
               <div className="movCellsPanel">
-                {this.state.solucionOptimal.map((color,idx) => 
-                  <button  key = {idx}
-                    className="cells"  
+                {this.state.solucionOptimal.map((color, idx) =>
+                  <button key={idx}
+                    className="cells"
                     style={{ backgroundColor: colorToCss(color) }}
                   />)}
               </div>
               <div className="movLab">Cantidad de celdas a capturar:</div>
               <div className="movLab">{this.state.adySolucionOp}</div>
             </div>}
-            {this.state.helpG_visible === true &&
+          {this.state.helpG_visible === true &&
             <div className="movPanel">
               <div className="historialLab">Movimientos de la ayuda greedy: </div>
               <div className="movCellsPanel">
-                {this.state.solucionGreedy.map((color,idx) =>
-                  <button key = {idx}
-                    className="cells"  
+                {this.state.solucionGreedy.map((color, idx) =>
+                  <button key={idx}
+                    className="cells"
                     style={{ backgroundColor: colorToCss(color) }}
                   />)}
               </div>
@@ -366,9 +380,9 @@ class Game extends React.Component {
           <div className="historialPanel">
             <div className="historialLab">Historial de jugadas</div>
             <div className="cellsPanel" >
-              {(this.state.history).map((color,idx) => 
+              {(this.state.history).map((color, idx) =>
                 <button key={idx}
-                  className="cells"  
+                  className="cells"
                   style={{ backgroundColor: colorToCss(color) }}
                 />)}
             </div>
@@ -378,7 +392,7 @@ class Game extends React.Component {
               <div className='menuGrilla'> Seleccionar grilla </div>
               {grillas.map(grilla =>
                 <button
-                  className="menu"  key = {grilla}
+                  className="menu" key={grilla}
                   onClick={() => this.handlePengineCreate(grilla)}
                 > {grilla} </button>)}
               <button className='menu'
